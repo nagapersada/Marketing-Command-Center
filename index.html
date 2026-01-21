@@ -52,7 +52,7 @@
             padding: 5px;
             margin-bottom: 25px;
             position: relative;
-            z-index: 10; /* Pastikan di atas */
+            z-index: 10;
         }
         .nav-btn {
             flex: 1;
@@ -95,24 +95,21 @@
             margin-top: 15px;
         }
         
-        /* INPUT & SELECT YANG AMAN UNTUK MOBILE */
+        /* INPUT & SELECT */
         select, input {
             width: 100%;
-            padding: 15px; /* Area sentuh besar */
+            padding: 15px;
             background: #222;
             border: 1px solid #444;
             border-radius: 10px;
             color: white;
-            font-size: 16px; /* Mencegah zoom otomatis di iPhone */
+            font-size: 16px;
             font-family: inherit;
-            appearance: none; /* Reset style bawaan HP */
+            appearance: none;
             -webkit-appearance: none;
         }
         
-        /* Tambahkan panah custom karena appearance:none */
-        .select-wrapper {
-            position: relative;
-        }
+        .select-wrapper { position: relative; }
         .select-wrapper::after {
             content: '▼';
             font-size: 12px;
@@ -124,7 +121,7 @@
             pointer-events: none;
         }
 
-        /* TOMBOL UTAMA */
+        /* BUTTONS */
         .btn-action {
             width: 100%;
             padding: 18px;
@@ -137,13 +134,8 @@
             border-radius: 10px;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
-            position: relative;
-            z-index: 10;
         }
-        .btn-action:active {
-            transform: scale(0.98);
-            background: #b5952f;
-        }
+        .btn-action:active { transform: scale(0.98); background: #b5952f; }
 
         /* RESULT AREA */
         .result-area {
@@ -237,6 +229,7 @@
     <div id="section-profit" class="section">
         <div class="card">
             <h3 style="color:var(--gold); margin-top:0;">💎 Simulasi Dividen</h3>
+            <p style="font-size:0.8rem; color:#666; margin-top:0;">Perhitungan Siklus 10 Hari (Fee 0.85%)</p>
             
             <label>Jumlah Anggota Tim</label>
             <input type="number" id="input-member" value="10" inputmode="numeric">
@@ -245,9 +238,9 @@
             <input type="number" id="input-vol" value="100" inputmode="numeric">
             
             <div class="calc-display">
-                <div style="font-size:0.9rem; color:#888;">Pendapatan Mingguan</div>
-                <div id="calc-usd" class="money">$21.00</div>
-                <div style="color:#fff;">Rp <span id="calc-idr">315.000</span></div>
+                <div style="font-size:0.9rem; color:#888;">Pendapatan (10 Hari)</div>
+                <div id="calc-usd" class="money">$2.55</div>
+                <div style="color:#fff;">Rp <span id="calc-idr">39.525</span></div>
                 <div style="font-size:0.8rem; color:#666; margin-top:5px;">Level: <span id="calc-level">LV1</span> (Rate: <span id="calc-rate">0.3%</span>)</div>
             </div>
             
@@ -283,7 +276,7 @@
         }
     };
 
-    // SETUP EVENT LISTENERS (Saat Web Siap)
+    // SETUP EVENT LISTENERS
     document.addEventListener('DOMContentLoaded', function() {
         
         // --- 1. TAB SWITCHING ---
@@ -293,10 +286,8 @@
         const secProfit = document.getElementById('section-profit');
 
         tabCreator.addEventListener('click', function() {
-            // Aktifkan tombol
             tabCreator.classList.add('active');
             tabProfit.classList.remove('active');
-            // Tampilkan section
             secCreator.classList.add('active');
             secProfit.classList.remove('active');
         });
@@ -315,21 +306,12 @@
         btnGen.addEventListener('click', function() {
             const platform = document.getElementById('input-platform').value;
             const topic = document.getElementById('input-topic').value;
-            
-            // Ambil text
             const text = templates[platform][topic];
-            
-            // Masukkan ke output
             document.getElementById('output-text').innerText = text;
-            
-            // Tampilkan kotak hasil
             resultBox.style.display = 'block';
-            
-            // Scroll ke hasil agar user tau sudah jadi
             resultBox.scrollIntoView({behavior: 'smooth'});
         });
 
-        // --- 3. COPY BUTTON ---
         document.getElementById('btn-copy').addEventListener('click', function() {
             const text = document.getElementById('output-text').innerText;
             navigator.clipboard.writeText(text).then(() => {
@@ -339,7 +321,7 @@
             });
         });
 
-        // --- 4. CALCULATOR LOGIC (Auto Hitung) ---
+        // --- 3. CALCULATOR LOGIC (UPDATED FORMULA) ---
         const inputs = [document.getElementById('input-member'), document.getElementById('input-vol')];
         const btnRecalc = document.getElementById('btn-recalc');
 
@@ -360,21 +342,23 @@
             else if (member >= 31) { rate = 0.005; level = "LV2"; }
             else if (member >= 5) { rate = 0.003; level = "LV1"; }
             
-            const weekly = (member * vol) * 7 * rate;
-            const idr = weekly * 15500;
+            // RUMUS BARU: ((Member * Vol) * 0.85%) * 10 Hari * Rate
+            // 0.85% = 0.0085
+            const dailyVolume = member * vol;
+            const dailyBase = dailyVolume * 0.0085; // Fee base
+            const tenDayBase = dailyBase * 10;
+            const profit = tenDayBase * rate;
+            
+            const idr = profit * 15500;
 
-            document.getElementById('calc-usd').innerText = "$" + weekly.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('calc-usd').innerText = "$" + profit.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             document.getElementById('calc-idr').innerText = idr.toLocaleString('id-ID');
             document.getElementById('calc-level').innerText = level;
             document.getElementById('calc-rate').innerText = (rate*100).toFixed(1) + "%";
         }
 
-        // Hitung saat mengetik
         inputs.forEach(input => input.addEventListener('input', calculate));
-        // Hitung saat tombol hitung ulang ditekan (opsional)
         btnRecalc.addEventListener('click', calculate);
-        
-        // Hitung awal
         calculate();
     });
 </script>
