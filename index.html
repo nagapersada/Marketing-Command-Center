@@ -3,420 +3,380 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DV OPALP | Official Partner Tools</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>DV OPALP Tools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold-primary: #D4AF37;
-            --gold-light: #F4C430;
-            --gold-dark: #AA8C2C;
-            --bg-dark: #050505;
-            --glass-bg: rgba(30, 30, 30, 0.6);
-            --glass-border: rgba(212, 175, 55, 0.3);
-            --text-main: #ffffff;
-            --text-muted: #b0b0b0;
+            --gold: #D4AF37;
+            --bg: #0a0a0a;
+            --card: #151515;
+            --text: #ffffff;
         }
 
-        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-dark);
-            background-image: radial-gradient(circle at top center, #1a1500 0%, #000000 70%);
-            color: var(--text-main);
+            background-color: var(--bg);
+            color: var(--text);
             margin: 0;
-            padding: 20px 10px;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 600px;
-            position: relative;
+            padding: 20px 15px;
+            padding-bottom: 50px;
         }
 
         /* HEADER */
-        header {
+        .header {
             text-align: center;
             margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
         }
-
-        .logo-text {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            background: linear-gradient(45deg, var(--gold-primary), #fff, var(--gold-primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .header h1 {
+            color: var(--gold);
             margin: 0;
+            font-size: 1.8rem;
+            text-transform: uppercase;
             letter-spacing: 1px;
         }
-
-        .subtitle {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-top: 5px;
+        .header p {
+            color: #888;
+            font-size: 0.8rem;
+            margin: 5px 0 0 0;
         }
 
-        /* NAVIGATION TABS (PILL SHAPE) */
-        .nav-wrapper {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 5px;
-            border-radius: 50px;
+        /* NAV TABS */
+        .nav-container {
             display: flex;
+            background: #222;
+            border-radius: 50px;
+            padding: 5px;
             margin-bottom: 25px;
             position: relative;
+            z-index: 10; /* Pastikan di atas */
         }
-
         .nav-btn {
             flex: 1;
             padding: 12px;
             border: none;
             background: transparent;
-            color: var(--text-muted);
-            font-family: 'Poppins', sans-serif;
+            color: #888;
             font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
+            font-family: inherit;
             border-radius: 40px;
-            transition: all 0.3s ease;
-            z-index: 2;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.95rem;
         }
-
         .nav-btn.active {
+            background: var(--gold);
             color: #000;
-            background: var(--gold-primary);
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
         }
 
-        /* CARDS */
+        /* CARD STYLE */
+        .section { display: none; }
+        .section.active { display: block; animation: fadeEffect 0.5s; }
+
         .card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: var(--card);
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 20px;
             margin-bottom: 20px;
-            animation: slideUp 0.5s ease;
+            position: relative;
+            z-index: 5;
         }
 
-        h3 {
-            margin-top: 0;
-            color: var(--gold-primary);
-            font-family: 'Playfair Display', serif;
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-        }
-
-        /* FORMS & INPUTS */
         label {
             display: block;
-            font-size: 0.8rem;
-            color: var(--text-muted);
+            color: #aaa;
+            font-size: 0.85rem;
             margin-bottom: 8px;
             margin-top: 15px;
         }
-
+        
+        /* INPUT & SELECT YANG AMAN UNTUK MOBILE */
         select, input {
             width: 100%;
-            padding: 14px;
-            background: rgba(0,0,0,0.4);
-            border: 1px solid #333;
-            border-radius: 12px;
+            padding: 15px; /* Area sentuh besar */
+            background: #222;
+            border: 1px solid #444;
+            border-radius: 10px;
             color: white;
-            font-size: 1rem;
-            transition: 0.3s;
-            font-family: 'Poppins', sans-serif;
+            font-size: 16px; /* Mencegah zoom otomatis di iPhone */
+            font-family: inherit;
+            appearance: none; /* Reset style bawaan HP */
+            -webkit-appearance: none;
+        }
+        
+        /* Tambahkan panah custom karena appearance:none */
+        .select-wrapper {
+            position: relative;
+        }
+        .select-wrapper::after {
+            content: '▼';
+            font-size: 12px;
+            color: var(--gold);
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
         }
 
-        select:focus, input:focus {
-            border-color: var(--gold-primary);
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
-        }
-
-        /* BUTTONS */
-        .btn-gold {
+        /* TOMBOL UTAMA */
+        .btn-action {
             width: 100%;
-            padding: 16px;
-            margin-top: 20px;
-            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
-            border: none;
-            border-radius: 12px;
+            padding: 18px;
+            margin-top: 25px;
+            background: var(--gold);
             color: #000;
             font-weight: 700;
             font-size: 1rem;
+            border: none;
+            border-radius: 10px;
             cursor: pointer;
-            letter-spacing: 1px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+            position: relative;
+            z-index: 10;
         }
-
-        .btn-gold:active {
+        .btn-action:active {
             transform: scale(0.98);
+            background: #b5952f;
         }
 
-        .btn-copy {
-            background: rgba(255,255,255,0.1);
-            color: var(--text-muted);
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
-            width: 100%;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        
-        .btn-copy:hover {
-            background: rgba(255,255,255,0.15);
-            color: white;
-        }
-
-        /* OUTPUT AREA */
-        .output-box {
-            background: rgba(0,0,0,0.6);
-            padding: 15px;
-            border-radius: 12px;
-            border-left: 3px solid var(--gold-primary);
-            min-height: 100px;
-            white-space: pre-wrap;
-            font-size: 0.95rem;
-            line-height: 1.6;
+        /* RESULT AREA */
+        .result-area {
+            display: none;
             margin-top: 20px;
-            color: #e0e0e0;
+            background: #000;
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .result-text {
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #eee;
+        }
+        .copy-btn {
+            margin-top: 10px;
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            padding: 10px;
+            width: 100%;
+            border-radius: 8px;
+            cursor: pointer;
         }
 
-        /* CALCULATOR GRID */
-        .calc-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .result-panel {
+        /* CALCULATOR DISPLAY */
+        .calc-display {
             text-align: center;
-            margin-top: 25px;
+            background: #222;
             padding: 20px;
-            background: rgba(212, 175, 55, 0.05);
-            border-radius: 15px;
-            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 1px solid #333;
         }
-
-        .result-value {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.2rem;
-            color: var(--gold-primary);
+        .money {
+            font-size: 2rem;
+            color: var(--gold);
+            font-weight: 700;
             margin: 10px 0;
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
         }
 
-        .section { display: none; }
-        .section.active { display: block; }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Toast Notification */
-        #toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: var(--gold-primary);
-            color: #000;
-            text-align: center;
-            border-radius: 50px;
-            padding: 16px;
-            position: fixed;
-            z-index: 1;
-            left: 50%;
-            bottom: 30px;
-            transform: translateX(-50%);
-            font-weight: 600;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-        }
-
-        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
-        
-        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
-        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+        @keyframes fadeEffect { from {opacity: 0;} to {opacity: 1;} }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <header>
-        <h1 class="logo-text">DV OPALP</h1>
-        <div class="subtitle">System & Marketing Command</div>
-    </header>
-
-    <div class="nav-wrapper">
-        <button class="nav-btn active" onclick="showSection('generator', this)">Creator</button>
-        <button class="nav-btn" onclick="showSection('calculator', this)">Profit Sim</button>
+    <div class="header">
+        <h1>DV OPALP</h1>
+        <p>System & Marketing Command</p>
     </div>
 
-    <div id="generator" class="section active">
+    <div class="nav-container">
+        <button id="tab-creator" class="nav-btn active">Creator</button>
+        <button id="tab-profit" class="nav-btn">Profit Sim</button>
+    </div>
+
+    <div id="section-creator" class="section active">
         <div class="card">
-            <h3>✒️ Content Generator</h3>
+            <h3 style="color:var(--gold); margin-top:0;">📝 Content Generator</h3>
             
             <label>Platform Tujuan</label>
-            <select id="platform">
-                <option value="wa">WhatsApp Broadcast (Formal)</option>
-                <option value="ig">Instagram/Facebook (Elegan)</option>
-                <option value="tiktok">TikTok/Reels Script (Viral)</option>
-            </select>
+            <div class="select-wrapper">
+                <select id="input-platform">
+                    <option value="wa">WhatsApp Broadcast</option>
+                    <option value="ig">Instagram/Facebook</option>
+                    <option value="tiktok">TikTok/Reels Script</option>
+                </select>
+            </div>
 
             <label>Fokus Topik</label>
-            <select id="topic">
-                <option value="security">🛡️ Legalitas (FinCEN & Sequoia)</option>
-                <option value="profit">📈 Akurasi Sinyal (96.8%)</option>
-                <option value="team">💰 Dividen Tim (Passive Income)</option>
-            </select>
+            <div class="select-wrapper">
+                <select id="input-topic">
+                    <option value="security">🛡️ Legalitas & Keamanan</option>
+                    <option value="profit">📈 Akurasi Sinyal (96.8%)</option>
+                    <option value="team">💰 Dividen Tim (Passive)</option>
+                </select>
+            </div>
 
-            <button class="btn-gold" onclick="generate()">GENERATE KONTEN</button>
+            <button id="btn-generate" class="btn-action">GENERATE KONTEN</button>
         </div>
 
-        <div class="card" id="resultCard" style="display:none;">
-            <h3>Hasil Output</h3>
-            <div class="output-box" id="output"></div>
-            <button class="btn-copy" onclick="copyText()">📋 Salin ke Clipboard</button>
+        <div id="result-box" class="result-area">
+            <div style="font-size:0.8rem; color:var(--gold); margin-bottom:10px;">👇 Hasil Konten:</div>
+            <div id="output-text" class="result-text"></div>
+            <button id="btn-copy" class="copy-btn">Salin Teks</button>
         </div>
     </div>
 
-    <div id="calculator" class="section">
+    <div id="section-profit" class="section">
         <div class="card">
-            <h3>💎 Estimasi Dividen Mingguan</h3>
-            <p style="font-size:0.8rem; color:#aaa; margin-bottom:20px;">Hitung potensi pasif income dari volume trading tim Anda.</p>
+            <h3 style="color:var(--gold); margin-top:0;">💎 Simulasi Dividen</h3>
             
-            <div class="calc-grid">
-                <div>
-                    <label>Total Anggota Tim</label>
-                    <input type="number" id="members" value="10" placeholder="Jlh Anggota" oninput="calc()">
-                </div>
-                <div>
-                    <label>Trading/Orang ($)</label>
-                    <input type="number" id="tradeVol" value="100" placeholder="Volume" oninput="calc()">
-                </div>
-            </div>
+            <label>Jumlah Anggota Tim</label>
+            <input type="number" id="input-member" value="10" inputmode="numeric">
 
-            <div class="result-panel">
-                <div style="font-size:0.9rem; color:#888;">Level Agen: <strong id="agentLevel" style="color:var(--gold-primary)">LV1</strong></div>
-                <div class="result-value" id="weeklyIncome">$21.00</div>
-                <div style="font-size:0.9rem; color:#fff;">Est. Rp <span id="idrIncome">315.000</span> / Minggu</div>
-                <div style="font-size:0.75rem; color:#666; margin-top:5px;">(Rate Komisi: <span id="commRate">0.3%</span>)</div>
+            <label>Rata-rata Trading ($)</label>
+            <input type="number" id="input-vol" value="100" inputmode="numeric">
+            
+            <div class="calc-display">
+                <div style="font-size:0.9rem; color:#888;">Pendapatan Mingguan</div>
+                <div id="calc-usd" class="money">$21.00</div>
+                <div style="color:#fff;">Rp <span id="calc-idr">315.000</span></div>
+                <div style="font-size:0.8rem; color:#666; margin-top:5px;">Level: <span id="calc-level">LV1</span> (Rate: <span id="calc-rate">0.3%</span>)</div>
             </div>
+            
+            <button id="btn-recalc" class="btn-action" style="margin-top:15px; background:#333; color:#fff; border:1px solid #555;">Hitung Ulang</button>
         </div>
-
-        <div class="card">
-            <h3 style="font-size:1rem;">ℹ️ Referensi Level (DV Team)</h3>
-            <ul style="font-size:0.8rem; color:#aaa; padding-left:20px; line-height:1.8;">
-                <li><strong>LV1 (5-30 Orang):</strong> 0.3% Dividen</li>
-                <li><strong>LV2 (31-100 Orang):</strong> 0.5% Dividen</li>
-                <li><strong>LV3 (101-200 Orang):</strong> 1.0% Dividen</li>
-                <li><strong>LV4 - LV9:</strong> 1.5% s/d 5.0% Dividen</li>
-            </ul>
+        
+        <div class="card" style="font-size:0.8rem; color:#888;">
+            <strong>Panduan Level:</strong><br>
+            • LV1 (5+ Orang): 0.3%<br>
+            • LV2 (31+ Orang): 0.5%<br>
+            • LV3 (101+ Orang): 1.0%<br>
+            • LV4 keatas: Max 5.0%
         </div>
     </div>
-</div>
-
-<div id="toast">Teks berhasil disalin!</div>
 
 <script>
-    // DATA TEMPLATES (Berdasarkan File PPT)
+    // DATA TEMPLATE
     const templates = {
         wa: {
-            [span_3](start_span)[span_4](start_span)security: "*Undangan Kemitraan Strategis DV Team*\n\nSelamat Pagi/Siang,\n\nKami mengundang Anda untuk bermitra dalam ekosistem *Digital Verification* yang didukung langsung oleh **Sequoia Capital**.\n\nLegalitas kami terjamin dengan lisensi **MSB FinCEN** (Departemen Keuangan AS), memastikan setiap transaksi aman dan terverifikasi[span_3](end_span)[span_4](end_span).\n\nJika Anda mencari instrumen investasi yang profesional dan legal, mari berdiskusi.\n\nSalam,\nManagement DV Team",
-            profit: "*Profit Presisi dengan AI Big Data*\n\nTrading bukan spekulasi. [span_5](start_span)Di DV Team, kami menggunakan data.\n\nDengan akurasi sinyal mencapai **96.8%** yang dipandu oleh Mr. Mark Davis (PhD MIT), kami menawarkan stabilitas hasil setiap hari[span_5](end_span).\n\n🛡️ *Risk Free:* Kompensasi kerugian 100% tersedia bagi anggota yang mengikuti sinyal resmi.\n\nSiap membuktikannya? Balas pesan ini.",
+            security: "*Undangan Kemitraan Strategis DV Team*\n\nSelamat Pagi/Siang,\n\nKami mengundang Anda untuk bermitra dalam ekosistem *Digital Verification* yang didukung langsung oleh **Sequoia Capital**.\n\nLegalitas kami terjamin dengan lisensi **MSB FinCEN** (Departemen Keuangan AS), memastikan setiap transaksi aman dan terverifikasi.\n\nJika Anda mencari instrumen investasi yang profesional dan legal, mari berdiskusi.\n\nSalam,\nManagement DV Team",
+            profit: "*Profit Presisi dengan AI Big Data*\n\nTrading bukan spekulasi. Di DV Team, kami menggunakan data.\n\nDengan akurasi sinyal mencapai **96.8%** yang dipandu oleh Mr. Mark Davis (PhD MIT), kami menawarkan stabilitas hasil setiap hari.\n\n🛡️ *Risk Free:* Kompensasi kerugian 100% tersedia bagi anggota yang mengikuti sinyal resmi.\n\nSiap membuktikannya? Balas pesan ini.",
             team: "*Strategi Income: The Power of 5*\n\nHalo Rekan,\n\nSaya ingin berbagi strategi 'Manajemen 5 Orang' yang digunakan DV Team untuk menciptakan pasif income mingguan.\n\nAnda tidak perlu mencari ribuan orang. Cukup kelola 5 mitra inti, dan sistem duplikasi kami akan bekerja untuk Anda. Dapatkan dividen dari total volume trading tim—bukan hanya dari deposit.\n\nPelajari skema lengkapnya sekarang."
         },
         ig: {
-            security: "🏛️ **STANDAR EMAS LEGALITAS**\n.\nDalam dunia finansial, keamanan adalah segalanya. [span_6](start_span)Opalp Exchange memegang lisensi MSB (Money Services Business) dari FinCEN AS, menjamin operasional yang patuh hukum global[span_6](end_span).\n.\nDidukung oleh Sequoia Capital, kami hadir untuk investor yang mengutamakan ketenangan pikiran.\n.\n#DVTeam #LegalitasTerjamin #SequoiaCapital #FintechProfessional",
-            profit: "🎯 **AKURASI 96.8% ADALAH KUNCI**\n.\nKenapa mengambil risiko jika Anda bisa memiliki kepastian? Algoritma AI DV Team memberikan sinyal presisi tinggi setiap hari.\n.\nDipimpin oleh Mark Davis, tim kami memastikan pertumbuhan aset Anda stabil dan terukur. Jika rugi? [span_7](start_span)Kami ganti 100%[span_7](end_span).\n.\nKlik link di bio untuk akses eksklusif.\n#SmartInvestment #AITrading #MarkDavis #DVOpalp",
+            security: "🏛️ **STANDAR EMAS LEGALITAS**\n.\nDalam dunia finansial, keamanan adalah segalanya. Opalp Exchange memegang lisensi MSB (Money Services Business) dari FinCEN AS, menjamin operasional yang patuh hukum global.\n.\nDidukung oleh Sequoia Capital, kami hadir untuk investor yang mengutamakan ketenangan pikiran.\n.\n#DVTeam #LegalitasTerjamin #SequoiaCapital #FintechProfessional",
+            profit: "🎯 **AKURASI 96.8% ADALAH KUNCI**\n.\nKenapa mengambil risiko jika Anda bisa memiliki kepastian? Algoritma AI DV Team memberikan sinyal presisi tinggi setiap hari.\n.\nDipimpin oleh Mark Davis, tim kami memastikan pertumbuhan aset Anda stabil dan terukur. Jika rugi? Kami ganti 100%.\n.\nKlik link di bio untuk akses eksklusif.\n#SmartInvestment #AITrading #MarkDavis #DVOpalp",
             team: "🤝 **BANGUN ASET, BUKAN SEKADAR TRADING**\n.\nJadilah Leader di DV Team. Dengan sistem Dividen Volume Mingguan, potensi income Anda tidak terbatas pada modal pribadi.\n.\nCukup mulai dengan 5 Tim Inti. Duplikasikan, dan nikmati hasilnya setiap minggu.\n.\n#PassiveIncome #Leadership #BusinessGrowth #DVTeam"
         },
         tiktok: {
-            security: "(Visual: Tunjukkan Sertifikat MSB di slide PPT)\n\nStop trading di tempat yang gak jelas!\nOpalp Exchange itu resmi, Guys. [span_8](start_span)Kita punya lisensi MSB dari FinCEN Amerika Serikat[span_8](end_span).\n\nBackup-nya siapa? Sequoia Capital! [span_9](start_span)Perusahaan yang invest di Google & Apple[span_9](end_span).\nDana lo aman, trading lo tenang. \n\nJoin yang pasti-pasti aja. Link di bio!",
-            [span_10](start_span)profit: "(Visual: Grafik hijau naik cepat)\n\n96.8 Persen.\nItu tingkat akurasi sinyal kita di DV Team[span_10](end_span).\n\nGak perlu pusing analisa chart. Ikutin aja arahan Mr. Mark Davis, lulusan MIT.\nKalo loss gimana? [span_11](start_span)Diganti 100% modal lo balik[span_11](end_span).\n\nEnak apa enak banget? Gass join sekarang!",
+            security: "(Visual: Tunjukkan Sertifikat MSB di slide PPT)\n\nStop trading di tempat yang gak jelas!\nOpalp Exchange itu resmi, Guys. Kita punya lisensi MSB dari FinCEN Amerika Serikat.\n\nBackup-nya siapa? Sequoia Capital! Perusahaan yang invest di Google & Apple.\nDana lo aman, trading lo tenang. \n\nJoin yang pasti-pasti aja. Link di bio!",
+            profit: "(Visual: Grafik hijau naik cepat)\n\n96.8 Persen.\nItu tingkat akurasi sinyal kita di DV Team.\n\nGak perlu pusing analisa chart. Ikutin aja arahan Mr. Mark Davis, lulusan MIT.\nKalo loss gimana? Diganti 100% modal lo balik.\n\nEnak apa enak banget? Gass join sekarang!",
             team: "(Visual: Santai cek HP)\n\nMau gaji mingguan setara manajer?\nRahasia ada di Tim 5 Orang DV Team.\n\nLo cuma perlu manage 5 temen. Saat tim lo berkembang, dividen volume trading bakal ngalir tiap minggu ke dompet lo.\n\nKerja cerdas, bukan kerja keras. Cek caption caranya!"
         }
     };
 
-    // LOGIC NAVIGASI
-    function showSection(id, btn) {
-        document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
+    // SETUP EVENT LISTENERS (Saat Web Siap)
+    document.addEventListener('DOMContentLoaded', function() {
         
-        document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-        btn.classList.add('active');
-    }
+        // --- 1. TAB SWITCHING ---
+        const tabCreator = document.getElementById('tab-creator');
+        const tabProfit = document.getElementById('tab-profit');
+        const secCreator = document.getElementById('section-creator');
+        const secProfit = document.getElementById('section-profit');
 
-    // LOGIC GENERATOR
-    function generate() {
-        const p = document.getElementById('platform').value;
-        const t = document.getElementById('topic').value;
-        const text = templates[p][t];
-        
-        document.getElementById('output').innerText = text;
-        document.getElementById('resultCard').style.display = 'block';
-        
-        // Auto scroll ke hasil
-        document.getElementById('resultCard').scrollIntoView({behavior: 'smooth'});
-    }
-
-    function copyText() {
-        const text = document.getElementById('output').innerText;
-        navigator.clipboard.writeText(text).then(() => {
-            showToast();
+        tabCreator.addEventListener('click', function() {
+            // Aktifkan tombol
+            tabCreator.classList.add('active');
+            tabProfit.classList.remove('active');
+            // Tampilkan section
+            secCreator.classList.add('active');
+            secProfit.classList.remove('active');
         });
-    }
 
-    function showToast() {
-        var x = document.getElementById("toast");
-        x.className = "show";
-        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
-    }
+        tabProfit.addEventListener('click', function() {
+            tabProfit.classList.add('active');
+            tabCreator.classList.remove('active');
+            secProfit.classList.add('active');
+            secCreator.classList.remove('active');
+        });
 
-    // LOGIC CALCULATOR (Sesuai PPT Slide 92-94)
-    function calc() {
-        const members = parseFloat(document.getElementById('members').value) || 0;
-        const vol = parseFloat(document.getElementById('tradeVol').value) || 0;
+        // --- 2. GENERATOR LOGIC ---
+        const btnGen = document.getElementById('btn-generate');
+        const resultBox = document.getElementById('result-box');
+        
+        btnGen.addEventListener('click', function() {
+            const platform = document.getElementById('input-platform').value;
+            const topic = document.getElementById('input-topic').value;
+            
+            // Ambil text
+            const text = templates[platform][topic];
+            
+            // Masukkan ke output
+            document.getElementById('output-text').innerText = text;
+            
+            // Tampilkan kotak hasil
+            resultBox.style.display = 'block';
+            
+            // Scroll ke hasil agar user tau sudah jadi
+            resultBox.scrollIntoView({behavior: 'smooth'});
+        });
 
-        let rate = 0;
-        let level = "Start";
+        // --- 3. COPY BUTTON ---
+        document.getElementById('btn-copy').addEventListener('click', function() {
+            const text = document.getElementById('output-text').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = this.innerText;
+                this.innerText = "✅ Tersalin!";
+                setTimeout(() => { this.innerText = originalText; }, 2000);
+            });
+        });
 
-        // Logic Level sesuai Slide 92-94 PPT
-        if (members >= 3500) { rate = 0.050; level = "LV9"; }
-        else if (members >= 1601) { rate = 0.035; level = "LV8"; }
-        else if (members >= 901) { rate = 0.030; level = "LV7"; }
-        else if (members >= 501) { rate = 0.025; level = "LV6"; }
-        else if (members >= 351) { rate = 0.020; level = "LV5"; }
-        else if (members >= 201) { rate = 0.015; level = "LV4"; }
-        else if (members >= 101) { rate = 0.010; level = "LV3"; }
-        else if (members >= 31) { rate = 0.005; level = "LV2"; }
-        else if (members >= 5) { rate = 0.003; level = "LV1"; [span_12](start_span)} //[span_12](end_span)
-        else { rate = 0; level = "-"; }
+        // --- 4. CALCULATOR LOGIC (Auto Hitung) ---
+        const inputs = [document.getElementById('input-member'), document.getElementById('input-vol')];
+        const btnRecalc = document.getElementById('btn-recalc');
 
-        // Rumus: Total Volume Harian (Members * AvgTrade) * 7 Hari * Rate
-        const dailyTotal = members * vol;
-        const weeklyTotal = dailyTotal * 7;
-        const income = weeklyTotal * rate;
-        const idr = income * 15500; // Asumsi kurs aman
+        function calculate() {
+            const member = parseFloat(document.getElementById('input-member').value) || 0;
+            const vol = parseFloat(document.getElementById('input-vol').value) || 0;
+            
+            let rate = 0;
+            let level = "Start";
 
-        // Update UI dengan animasi angka
-        document.getElementById('agentLevel').innerText = level;
-        document.getElementById('commRate').innerText = (rate * 100).toFixed(1) + "%";
-        document.getElementById('weeklyIncome').innerText = "$" + income.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        document.getElementById('idrIncome').innerText = idr.toLocaleString('id-ID');
-    }
+            if (member >= 3500) { rate = 0.050; level = "LV9"; }
+            else if (member >= 1601) { rate = 0.035; level = "LV8"; }
+            else if (member >= 901) { rate = 0.030; level = "LV7"; }
+            else if (member >= 501) { rate = 0.025; level = "LV6"; }
+            else if (member >= 351) { rate = 0.020; level = "LV5"; }
+            else if (member >= 201) { rate = 0.015; level = "LV4"; }
+            else if (member >= 101) { rate = 0.010; level = "LV3"; }
+            else if (member >= 31) { rate = 0.005; level = "LV2"; }
+            else if (member >= 5) { rate = 0.003; level = "LV1"; }
+            
+            const weekly = (member * vol) * 7 * rate;
+            const idr = weekly * 15500;
 
-    // Init Calculator saat load
-    calc();
+            document.getElementById('calc-usd').innerText = "$" + weekly.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('calc-idr').innerText = idr.toLocaleString('id-ID');
+            document.getElementById('calc-level').innerText = level;
+            document.getElementById('calc-rate').innerText = (rate*100).toFixed(1) + "%";
+        }
+
+        // Hitung saat mengetik
+        inputs.forEach(input => input.addEventListener('input', calculate));
+        // Hitung saat tombol hitung ulang ditekan (opsional)
+        btnRecalc.addEventListener('click', calculate);
+        
+        // Hitung awal
+        calculate();
+    });
 </script>
 
 </body>
