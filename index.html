@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MCC-NP">
+    <link rel="apple-touch-icon" href="logo.png">
+
+    <title>MCC-NP | Marketing Center Command</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-glow: #F4C430;
+            --bg-dark: #050505;
+            --surface: #121212;
+            --surface-light: #1e1e1e;
+            --text-main: #f0f0f0;
+            --text-dim: #888;
+            --safe-top: env(safe-area-inset-top);
+            --safe-bottom: env(safe-area-inset-bottom);
+        }
+
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0; padding: 0;
+            min-height: 100vh; overflow-x: hidden;
+            /* Background Premium */
+            background-image: radial-gradient(circle at top, #1a1500 0%, #000000 70%);
+        }
+
+        /* --- SPLASH SCREEN (INTRO) --- */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 30px; text-align: center;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+
+        .logo-breathe {
+            width: 100px; height: 100px; margin-bottom: 25px;
+            animation: breathe 3s infinite ease-in-out;
+        }
+        .logo-breathe img { width: 100%; height: 100%; object-fit: contain; }
+
+        .splash-title {
+            font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--gold);
+            margin-bottom: 5px; letter-spacing: 2px;
+        }
+        .splash-sub {
+            font-size: 0.65rem; color: #666; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 50px;
+        }
+
+        .btn-enter {
+            background: transparent; border: 1px solid var(--gold); color: var(--gold);
+            padding: 14px 40px; font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase;
+            cursor: pointer; border-radius: 4px; transition: 0.2s;
+        }
+        .btn-enter:active { background: rgba(212, 175, 55, 0.1); transform: scale(0.95); }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.6)); }
+        }
+
+        /* --- APP HEADER --- */
+        .app-header {
+            padding: calc(15px + var(--safe-top)) 20px 15px 20px;
+            background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .brand-box { display: flex; align-items: center; gap: 12px; }
+        .brand-icon { width: 32px; height: 32px; object-fit: contain; }
+        .brand-text h1 { margin: 0; font-size: 1.1rem; color: var(--gold); letter-spacing: 1px; font-weight: 800; display: flex; align-items: center; gap:8px;}
+        .brand-text span { font-size: 0.6rem; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; display: block; }
+        
+        /* Status Indicator */
+        .status-badge {
+            font-size: 0.6rem; padding: 2px 6px; border-radius: 4px;
+            background: rgba(0, 255, 0, 0.1); color: #00ff00; border: 1px solid #00ff00;
+            display: inline-flex; align-items: center; gap: 4px; letter-spacing: 0.5px;
+        }
+        .status-dot { width: 6px; height: 6px; background: #00ff00; border-radius: 50%; box-shadow: 0 0 5px #00ff00; }
+        
+        /* Offline State */
+        .status-badge.offline {
+            background: rgba(255, 0, 0, 0.1); color: #ff3333; border-color: #ff3333;
+        }
+        .status-badge.offline .status-dot { background: #ff3333; box-shadow: 0 0 5px #ff3333; }
+
+        .btn-install-nav {
+            background: rgba(255,255,255,0.05); border: 1px solid #333; color: var(--gold);
+            padding: 8px 14px; border-radius: 20px; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; gap: 5px;
+        }
+
+        /* --- CONTENT --- */
+        .main-container {
+            flex: 1; padding: 20px; padding-bottom: calc(90px + var(--safe-bottom));
+            max-width: 1200px; margin: 0 auto; width: 100%; opacity: 0; transition: opacity 0.8s;
+        }
+        @media (min-width: 768px) { .main-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start; } }
+
+        .glass-card {
+            background: var(--surface); border: 1px solid #2a2a2a; border-radius: 16px;
+            padding: 20px; margin-bottom: 20px; position: relative;
+        }
+
+        h2 { font-size: 1rem; color: var(--gold); margin: 0 0 15px 0; display: flex; align-items: center; gap: 8px; }
+        
+        label { display: block; color: var(--text-dim); font-size: 0.75rem; margin-bottom: 8px; margin-top: 15px; font-weight: 600; text-transform: uppercase; }
+        select, input {
+            width: 100%; background: var(--surface-light); border: 1px solid #333;
+            color: #fff; padding: 14px; border-radius: 10px; font-size: 0.95rem; font-family: inherit; appearance: none;
+        }
+        select:focus, input:focus { border-color: var(--gold); }
+        
+        .btn-gold {
+            width: 100%; padding: 16px; margin-top: 25px;
+            background: linear-gradient(135deg, var(--gold), #b5952f);
+            color: #000; font-weight: 800; font-size: 0.95rem; border: none; border-radius: 12px;
+            cursor: pointer; box-shadow: 0 5px 20px rgba(212, 175, 55, 0.15);
+        }
+        .btn-gold:active { transform: scale(0.97); }
+
+        .btn-secondary {
+            background: #222; border: 1px solid #333; color: #aaa;
+            padding: 12px; width: 100%; border-radius: 10px; cursor: pointer; margin-top: 10px;
+        }
+
+        .output-wrapper {
+            background: #000; border-radius: 12px; padding: 20px;
+            border-left: 3px solid var(--gold); min-height: 150px;
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        .result-text { font-size: 0.95rem; line-height: 1.6; color: #e0e0e0; white-space: pre-wrap; }
+        .placeholder-text { text-align: center; color: #444; font-size: 0.9rem; font-style: italic; }
+
+        /* --- BOTTOM NAV --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(18, 18, 18, 0.95); backdrop-filter: blur(10px);
+            padding: 10px 10px calc(10px + var(--safe-bottom)) 10px;
+            border-top: 1px solid #333; display: flex; gap: 10px; z-index: 90;
+        }
+        .tab-btn {
+            flex: 1; padding: 12px; border: none; background: transparent;
+            color: #666; font-weight: 600; border-radius: 12px; transition: 0.3s;
+        }
+        .tab-btn.active { background: #222; color: var(--gold); }
+
+        /* --- INSTALL OVERLAY --- */
+        #install-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 10000; display: none;
+            justify-content: center; align-items: flex-end; padding-bottom: 30px;
+        }
+        .install-card {
+            background: #1a1a1a; border: 1px solid var(--gold); padding: 20px;
+            border-radius: 15px; text-align: center; max-width: 90%; width: 350px;
+            animation: slideUp 0.4s ease; position: relative;
+        }
+        .install-arrow { font-size: 2rem; color: var(--gold); animation: bounce 1s infinite; display: block; margin-bottom: 10px; }
+        .install-text { color: #fff; font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; }
+        .close-install { position: absolute; top: 10px; right: 10px; color: #666; background: none; border: none; font-size: 1.2rem; cursor: pointer; }
+
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .hidden { display: none !important; }
+
+        /* Profit Styles */
+        .money-val { font-size: 2rem; font-weight: 800; color: var(--gold); margin: 5px 0; text-align: center;}
+        .money-idr { font-size: 1rem; color: #fff; opacity: 0.8; text-align: center; margin-bottom: 10px;}
+        .badges { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;}
+        .badge { background: #222; padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; color: #888; border: 1px solid #333; }
+        .badge.active { border-color: var(--gold); color: var(--gold); }
+        
+        /* OFFLINE WARNING */
+        #offline-msg {
+            background: #ff3333; color: white; text-align: center; padding: 5px; font-size: 0.7rem;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; z-index: 99999;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="offline-msg">⚠️ KONEKSI TERPUTUS - Hubungkan Internet</div>
+
+    <div id="splash-screen">
+        <div class="logo-breathe">
+            <img src="logo.png" alt="MCC-NP Logo">
+        </div>
+        <div class="splash-title">MCC-NP</div>
+        <div class="splash-sub">MARKETING CENTER COMMAND</div>
+        <button onclick="enterApp()" class="btn-enter">CONNECT TO SYSTEM</button>
+    </div>
+
+    <div id="install-overlay" onclick="this.style.display='none'">
+        <div class="install-card" onclick="event.stopPropagation()">
+            <button class="close-install" onclick="document.getElementById('install-overlay').style.display='none'">×</button>
+            <div class="install-arrow" id="install-icon">⬇️</div>
+            <h3 style="color:var(--gold); margin:0 0 10px 0;">Install MCC-NP</h3>
+            <div class="install-text" id="install-msg">
+                Tap menu browser, pilih <strong>"Add to Home Screen"</strong> untuk akses cepat.
+            </div>
+        </div>
+    </div>
+
+    <header class="app-header">
+        <div class="brand-box">
+            <img src="logo.png" class="brand-icon" alt="icon">
+            <div class="brand-text">
+                <h1>MCC-NP <div id="status-indicator" class="status-badge"><div class="status-dot"></div> ONLINE</div></h1>
+                <span>NAGA PERSADA COMMAND</span>
+            </div>
+        </div>
+        <button onclick="showInstall()" class="btn-install-nav">📲 Install</button>
+    </header>
+
+    <div class="main-container" id="main-app">
+        
+        <div id="view-creator" class="fade-in">
+            <div class="glass-card">
+                <h2>⚡ Generator Konten</h2>
+                <label>Target & Platform</label>
+                <div style="position:relative">
+                    <select id="input-platform">
+                        <option value="wa">WhatsApp (Broadcast)</option>
+                        <option value="ig">Instagram (Visual Caption)</option>
+                        <option value="fb">Facebook (Storytelling)</option>
+                        <option value="tiktok">TikTok (Video Script)</option>
+                    </select>
+                </div>
+                <label>Topik Kampanye</label>
+                <div style="position:relative">
+                    <select id="input-topic">
+                        <option value="profit">💰 Profit Harian (Anti-Inflasi)</option>
+                        <option value="sandwich">🥪 Solusi Sandwich Generation</option>
+                        <option value="trust">🛡️ Legalitas & Trust (FinCEN)</option>
+                        <option value="fomo">🔥 Viral & Momentum</option>
+                    </select>
+                </div>
+                <button onclick="generateContent()" class="btn-gold">GENERATE KONTEN ✨</button>
+            </div>
+        </div>
+
+        <div id="view-result" class="fade-in">
+            <div class="glass-card">
+                <h2>📋 Hasil Output</h2>
+                <div class="output-wrapper">
+                    <div id="output-text" class="placeholder-text">System Ready. Pilih topik dan Generate.</div>
+                </div>
+                <div style="display:flex; gap:10px; margin-top:10px;">
+                    <button onclick="copyText()" class="btn-secondary">Salin</button>
+                    <button onclick="shareText()" class="btn-secondary">Share</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-profit" class="hidden fade-in">
+            <div class="glass-card">
+                <h2>💎 Simulasi Dividen</h2>
+                <div class="money-val" id="disp-usd">$0.00</div>
+                <div class="money-idr" id="disp-idr">Rp 0</div>
+                <div class="badges">
+                    <div class="badge active" id="badge-level">LV -</div>
+                    <div class="badge active" id="badge-rate">0%</div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                    <div><label>Total Tim</label><input type="number" id="inp-member" value="100"></div>
+                    <div><label>Avg Trade</label><input type="number" id="inp-vol" value="100"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <button onclick="switchTab('creator')" id="tab-creator" class="tab-btn active">✍️ Creator</button>
+        <button onclick="switchTab('profit')" id="tab-profit" class="tab-btn">💰 Profit</button>
+    </nav>
+
+<script>
+    // --- DATABASE ---
+    const db = {
+        hooks: [
+            "Jujurly, capek banget gak sih jadi Sandwich Generation? 🥪",
+            "Gaji UMR, tapi pengeluaran kayak Pejabat? Relate banget! 😭",
+            "Info A1 Mazzeh! Jangan sampe nyesel belakangan 🔥",
+            "Stop scrolling! Ini tanda kalau keuanganmu lagi gak sehat 🛑",
+            "Menyala Abangku! 🔥 Saatnya kita bahas fakta pahit dunia kerja.",
+            "Real Talk: 2026 masih ngandelin satu sumber gaji? Bahaya cuy!",
+            "Sumpah, nyesel banget baru tau rahasia ini sekarang...",
+            "Bocoran orang dalem nih, tolong jangan disebar luas-luas 🤫",
+            "Kalian ngerasa gak sih, harga barang makin gila tapi dompet makin tipis?",
+            "Capek kerja keras bagai kuda, tapi tabungan segitu-gitu aja?",
+            "Ini bukan soal pamer, tapi soal merubah nasib keluarga!",
+            "Investasi bodong bikin rungkad? Sini merapat, kita bahas yang pasti-pasti aja.",
+            "POV: Kamu nemu 'Cheat Code' buat bebas finansial tahun ini.",
+            "Jangan skip kalau kamu sayang sama masa depan anakmu!",
+            "Viral banget! Ternyata gini cara orang kaya makin kaya...",
+            "Valid no Debat! Ini solusi buat yang gaji 'numpang lewat'.",
+            "Logika dasar: Gak mungkin hasil beda kalau cara kerjanya masih sama.",
+            "Tabungan tergerus inflasi? Ini obat penawarnya 💊",
+            "Game Changer! Sistem ini bikin kamu melek finansial dalam 5 menit.",
+            "Mau pensiun dini atau kerja sampe tua? Pilihan di tanganmu.",
+            "FOMO yang positif tuh kayak gini, bukan cuma ikut-ikutan trend joget!",
+            "Daging semua isinya! Simak sebelum dihapus sistem.",
+            "Wajib baca buat yang pengen lunas utang tahun ini!",
+            "Definisi 'Kerja Cerdas' yang sebenernya tuh ada di sini.",
+            "Apa kabar impianmu? Jangan biarkan terkubur rutinitas!"
+        ],
+        sandwich: {
+            probs: ["Bayangin, harus biayain orang tua, diri sendiri, plus anak. Pusing gak tuh?", "Rasanya kayak lari di tempat, kerja keras tapi duit abis buat bantu keluarga.", "Mau nabung buat rumah sendiri aja susahnya minta ampun."],
+            sols: ["Tapi tenang, MCC-NP punya solusi 'Passive Income' lewat sistem Dividen Volume.", "Di sini kamu bisa bangun aset digital yang kerjanya duplikasi tim, bukan kerja fisik.", "Cukup kelola 5 partner inti, biarkan sistem AI dan tim yang bekerja buat kamu."],
+            emos: ["Akhirnya bisa nafas lega, beban di pundak rasanya keangkat.", "Seneng banget bisa kasih lebih ke orang tua tanpa ngorbanin masa depan anak.", "Ini jalan ninja buat mutus rantai kemiskinan di keluarga kita."],
+            ctas: ["Yuk putus rantai sandwich generation bareng DV Team!", "Ambil slot kemitraanmu sekarang, ubah nasib keluargamu.", "DM 'SIAP' buat strategi lepas beban finansial."]
+        },
+        profit: { 
+            probs: ["Harga beras naik, bensin naik, tapi gaji segitu-gitu aja. Valid?", "Inflasi itu maling tak terlihat yang nyuri nilai tabungan kita tiap hari.", "Kalau cuma ngarepin gaji bulanan, bakal kegiles zaman, Bro."],
+            sols: ["Lawan inflasi pake Profit Harian dari Trading AI DV Opalp.", "Di sini, uangmu yang bekerja keras, bukan cuma kamu.", "Didukung Sequoia Capital, sistem kita dirancang buat ngalahin inflasi."],
+            emos: ["Sekarang mau beli apa-apa gak perlu liat harga lagi.", "Healing bukan lagi wacana, tapi agenda bulanan.", "Puas banget rasanya liat aset tumbuh lebih cepet dari kenaikan harga."],
+            ctas: ["Jangan biarkan inflasi makan mimpimu. Lawan bareng DV Team!", "Mulai cetak USDT hari ini, klik link bio!", "Amankan daya beli keluargamu sekarang juga."]
+        },
+        trust: {
+            probs: ["Trauma sama investasi bodong yang ownernya kabur?", "Zaman sekarang ngeri, banyak aplikasi scam berkedok trading.", "Bingung bedain mana yang real mana yang halu?"],
+            sols: ["DV Opalp beda! Kita pegang lisensi MSB FinCEN Amerika Serikat.", "Ada garansi modal 100% kalau ikut sinyal resmi Mr. Mark Davis.", "Backup dana kita 5 Juta USDT, plus support dari Sequoia Capital."],
+            emos: ["Tidur jadi nyenyak banget karena tau dana kita aman.", "Gak ada lagi tuh rasa was-was tiap mau login akun.", "Bangga gabung di komunitas yang profesional dan legal."],
+            ctas: ["Pilih yang pasti-pasti aja. Join DV Team yang resmi!", "Cek legalitas kami di link bio, jangan asal join tempat lain.", "Amankan asetmu di platform berlisensi US Treasury."]
+        },
+        fomo: {
+            probs: ["Liat temen udah pada sukses, kok kita gini-gini aja?", "Ketinggalan trend crypto kemarin? Jangan sampe kelewatan yang ini.", "Dunia berubah cepet banget, yang lambat bakal ketinggalan."],
+            sols: ["Ini momentum DV Opalp! Komunitas lagi bertumbuh gila-gilaan.", "Teknologi AI Trading kita lagi di puncaknya, akurasi 96.8%.", "Mumpung masih awal, ambil posisi 'Leader' di kotamu."],
+            emos: ["Seneng banget bisa curi start sebelum tetangga pada tau.", "Adrenalin naik liat pertumbuhan tim yang eksponensial.", "Gak nyesel ambil keputusan cepet, hasilnya nyata!"],
+            ctas: ["Jangan cuma jadi penonton! Ambil bagian sekarang!", "Gaspol sebelum slot leader di daerahmu penuh.", "Manfaatkan momentum ini, klik link bio!"]
+        }
+    };
+    
+    // --- SYSTEM LOGIC ---
+    function enterApp() {
+        document.getElementById('splash-screen').style.opacity = '0';
+        setTimeout(() => { 
+            document.getElementById('splash-screen').style.display='none'; 
+            document.getElementById('main-app').style.opacity = '1';
+        }, 500);
+    }
+
+    function showInstall() {
+        const overlay = document.getElementById('install-overlay');
+        const msg = document.getElementById('install-msg');
+        const icon = document.getElementById('install-icon');
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        
+        overlay.style.display = 'flex';
+        
+        if (isIOS) {
+            msg.innerHTML = 'Tap tombol Share <span style="font-size:1.2rem">⎋</span> di bawah, lalu pilih <strong>"Add to Home Screen"</strong>.';
+            icon.innerText = '⬇️';
+            overlay.style.alignItems = 'flex-end';
+        } else {
+            msg.innerHTML = 'Tap titik tiga di pojok kanan atas browser, lalu pilih <strong>"Tambahkan ke Layar Utama"</strong> atau <strong>"Install App"</strong>.';
+            icon.innerText = '↗️';
+            overlay.style.alignItems = 'flex-start';
+            overlay.style.paddingTop = '20px';
+        }
+    }
+
+    // --- NETWORK CHECKER (Memastikan user tahu kalau online/offline) ---
+    function updateStatus() {
+        const badge = document.getElementById('status-indicator');
+        const msg = document.getElementById('offline-msg');
+        
+        if(navigator.onLine) {
+            badge.classList.remove('offline');
+            badge.innerHTML = '<div class="status-dot"></div> ONLINE';
+            msg.style.display = 'none';
+        } else {
+            badge.classList.add('offline');
+            badge.innerHTML = '<div class="status-dot"></div> OFFLINE';
+            msg.style.display = 'block';
+        }
+    }
+    window.addEventListener('online', updateStatus);
+    window.addEventListener('offline', updateStatus);
+    updateStatus();
+
+    // --- GENERATOR LOGIC ---
+    function generateContent() {
+        const p = document.getElementById('input-platform').value;
+        const t = document.getElementById('input-topic').value;
+        const data = db[t];
+        const hook = db.hooks[Math.floor(Math.random()*db.hooks.length)];
+        const prob = data.probs[Math.floor(Math.random()*data.probs.length)];
+        const sol = data.sols[Math.floor(Math.random()*data.sols.length)];
+        const emo = data.emos[Math.floor(Math.random()*data.emos.length)];
+        const cta = data.ctas[Math.floor(Math.random()*data.ctas.length)];
+        
+        let txt = "";
+        if(p==='wa') txt = `*${hook}*\n\n${prob}\n\n💡 *Solusi:*\n${sol}\n\n✨ ${emo}\n\n👉 *${cta}*`;
+        else if(p==='ig') txt = `🔥 **${hook}**\n.\n${prob}\n.\n✅ ${sol}\n.\n💎 ${emo}\n.\n🚀 ${cta}\n.\n#DVTeam #MCCNP`;
+        else if(p==='fb') txt = `${hook}\n\n"${prob}"\n\nSolusinya: ${sol}\n\n${emo}\n\n${cta}`;
+        else txt = `[Visual: Kaget/Serius]\n\n(Teks: ${hook})\n\nVoice: "${prob}?"\n\n(Cut Profit)\n\n"Nih: ${sol}"\n\n"${emo}"\n\n(Bio)\n\n"${cta}"`;
+        
+        const out = document.getElementById('output-text');
+        out.classList.remove('placeholder-text');
+        out.innerText = txt;
+        
+        if(window.innerWidth < 768) document.getElementById('view-result').scrollIntoView({behavior:'smooth'});
+    }
+
+    // --- CALCULATOR LOGIC ---
+    function calculateProfit() {
+        const m = parseFloat(document.getElementById('inp-member').value)||0;
+        const v = parseFloat(document.getElementById('inp-vol').value)||0;
+        let r=0, l="LV -";
+        if(m>=3500){r=0.05;l="LV9"}else if(m>=1601){r=0.035;l="LV8"}else if(m>=901){r=0.03;l="LV7"}
+        else if(m>=501){r=0.025;l="LV6"}else if(m>=351){r=0.02;l="LV5"}else if(m>=201){r=0.015;l="LV4"}
+        else if(m>=101){r=0.01;l="LV3"}else if(m>=31){r=0.005;l="LV2"}else if(m>=5){r=0.003;l="LV1"}
+        
+        const res = ((m*v*0.0085)*10)*r;
+        document.getElementById('disp-usd').innerText = "$"+res.toLocaleString('en-US',{minimumFractionDigits:2});
+        document.getElementById('disp-idr').innerText = "Rp "+(res*15500).toLocaleString('id-ID');
+        document.getElementById('badge-level').innerText = l;
+        document.getElementById('badge-rate').innerText = (r*100).toFixed(1)+"%";
+    }
+
+    function switchTab(t) {
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        document.getElementById('tab-'+t).classList.add('active');
+        const vp = document.getElementById('view-profit');
+        const vc = document.getElementById('view-creator');
+        const vr = document.getElementById('view-result');
+        if(t==='profit'){ vp.classList.remove('hidden'); vc.classList.add('hidden'); if(window.innerWidth<768)vr.classList.add('hidden');}
+        else { vp.classList.add('hidden'); vc.classList.remove('hidden'); vr.classList.remove('hidden');}
+    }
+    
+    function copyText() { navigator.clipboard.writeText(document.getElementById('output-text').innerText).then(()=>alert('Tersalin!')); }
+    function shareText() { if(navigator.share) navigator.share({text:document.getElementById('output-text').innerText}); else copyText(); }
+
+    document.getElementById('inp-member').addEventListener('input', calculateProfit);
+    document.getElementById('inp-vol').addEventListener('input', calculateProfit);
+    calculateProfit();
+</script>
+</body>
+</html>
