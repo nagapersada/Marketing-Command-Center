@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MCC-NP">
+    <link rel="apple-touch-icon" href="logo.png">
+    <title>MCC-NP SYSTEM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+    <style>
+        /* --- STYLE PREMIUM GOLD TETAP SAMA --- */
+        :root { --gold: #D4AF37; --bg-dark: #050505; --surface: #121212; --text-main: #f0f0f0; --text-dim: #888; --safe-top: env(safe-area-inset-top); --safe-bottom: env(safe-area-inset-bottom); }
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-dark); color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden; background-image: radial-gradient(circle at top, #1a1500 0%, #000000 70%); }
+        
+        /* Splash & Header */
+        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; transition: opacity 0.6s ease, visibility 0.6s; }
+        .logo-anim { width: 120px; height: 120px; margin-bottom: 30px; animation: breathe 3s infinite ease-in-out; }
+        .logo-anim img { width: 100%; height: 100%; object-fit: contain; }
+        .splash-quote { font-size: 0.9rem; color: #aaa; font-style: italic; margin-bottom: 50px; max-width: 90%; min-height: 60px; }
+        .btn-enter { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 15px 40px; font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; border-radius: 4px; transition: 0.3s; }
+        @keyframes breathe { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.3)); } 50% { transform: scale(1.05); filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.6)); } }
+        
+        .app-header { padding: calc(15px + var(--safe-top)) 20px 15px 20px; background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        .brand-box { display: flex; align-items: center; gap: 12px; }
+        .brand-icon { width: 30px; height: 30px; object-fit: contain; }
+        .brand-text h1 { margin: 0; font-size: 1.1rem; color: var(--gold); font-weight: 800; display: flex; align-items: center; gap:8px;}
+        .status-dot { width: 6px; height: 6px; background: #00ff00; border-radius: 50%; box-shadow: 0 0 5px #00ff00; display: inline-block; }
+        .btn-install-nav { background: rgba(255,255,255,0.05); border: 1px solid #333; color: var(--gold); padding: 8px 14px; border-radius: 20px; font-size: 0.7rem; cursor: pointer; }
+
+        /* Content */
+        .main-container { flex: 1; padding: 20px; padding-bottom: calc(90px + var(--safe-bottom)); max-width: 1200px; margin: 0 auto; width: 100%; opacity: 0; transition: opacity 0.8s; }
+        @media (min-width: 768px) { .main-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start; } }
+        .glass-card { background: var(--surface); border: 1px solid #2a2a2a; border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+        h2 { font-size: 1rem; color: var(--gold); margin: 0 0 15px 0; }
+        label { display: block; color: var(--text-dim); font-size: 0.75rem; margin-bottom: 8px; margin-top: 15px; font-weight: 600; text-transform: uppercase; }
+        
+        select, input { width: 100%; background: #1e1e1e; border: 1px solid #333; color: #fff; padding: 14px; border-radius: 10px; font-size: 0.95rem; appearance: none; }
+        select:focus, input:focus { border-color: var(--gold); }
+        
+        /* NEW: Input Viral */
+        .viral-input { border: 1px solid var(--gold); background: rgba(212, 175, 55, 0.05); }
+        .viral-input:focus { box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
+
+        .btn-gold { width: 100%; padding: 16px; margin-top: 25px; background: linear-gradient(135deg, var(--gold), #b5952f); color: #000; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; box-shadow: 0 5px 20px rgba(212, 175, 55, 0.15); }
+        .btn-secondary { background: #222; border: 1px solid #333; color: #aaa; padding: 12px; width: 100%; border-radius: 10px; cursor: pointer; margin-top: 10px; }
+        .output-wrapper { background: #000; border-radius: 12px; padding: 20px; border-left: 3px solid var(--gold); min-height: 150px; display: flex; flex-direction: column; justify-content: center; }
+        .result-text { font-size: 0.95rem; line-height: 1.6; color: #e0e0e0; white-space: pre-wrap; }
+        
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 18, 18, 0.95); backdrop-filter: blur(10px); padding: 10px 10px calc(10px + var(--safe-bottom)) 10px; border-top: 1px solid #333; display: flex; gap: 10px; z-index: 90; }
+        .tab-btn { flex: 1; padding: 12px; border: none; background: transparent; color: #666; font-weight: 600; border-radius: 12px; transition: 0.3s; }
+        .tab-btn.active { background: #222; color: var(--gold); }
+        .hidden { display: none !important; }
+        
+        .money-val { font-size: 2rem; font-weight: 800; color: var(--gold); margin: 5px 0; text-align: center;}
+        .money-idr { font-size: 1rem; color: #fff; opacity: 0.8; text-align: center; margin-bottom: 10px;}
+        .badges { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;}
+        .badge { background: #222; padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; color: #888; border: 1px solid #333; }
+        .badge.active { border-color: var(--gold); color: var(--gold); }
+        
+        #install-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; display: none; justify-content: center; align-items: flex-end; padding-bottom: 30px; }
+        .install-card { background: #1a1a1a; border: 1px solid var(--gold); padding: 20px; border-radius: 15px; text-align: center; max-width: 90%; width: 350px; animation: slideUp 0.4s ease; position: relative; }
+        .close-install { position: absolute; top: 10px; right: 10px; color: #666; background: none; border: none; font-size: 1.2rem; cursor: pointer; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div id="splash-screen">
+        <div class="logo-anim"><img src="logo.png" alt="Logo"></div>
+        <h1 style="color:var(--gold); margin:0; font-family:'Playfair Display',serif;">MCC-NP</h1>
+        <div class="splash-quote" id="quote-text">Loading...</div>
+        <button onclick="enterApp()" class="btn-enter">CONNECT SYSTEM</button>
+    </div>
+
+    <div id="install-overlay" onclick="this.style.display='none'">
+        <div class="install-card" onclick="event.stopPropagation()">
+            <button class="close-install" onclick="document.getElementById('install-overlay').style.display='none'">×</button>
+            <h3 style="color:var(--gold);">Install MCC-NP</h3>
+            <p style="color:#fff; font-size:0.9rem;">Tap menu browser, pilih <strong>"Add to Home Screen"</strong>.</p>
+        </div>
+    </div>
+
+    <header class="app-header">
+        <div class="brand-box">
+            <img src="logo.png" class="brand-icon" alt="icon">
+            <div class="brand-text"><h1>MCC-NP <div class="status-dot"></div></h1></div>
+        </div>
+        <button onclick="document.getElementById('install-overlay').style.display='flex'" class="btn-install-nav">📲 Install</button>
+    </header>
+
+    <div class="main-container" id="main-app">
+        <div id="view-creator">
+            <div class="glass-card">
+                <h2>⚡ Viral Content Generator</h2>
+                
+                <label>Mau Posting Dimana?</label>
+                <div style="position:relative">
+                    <select id="input-platform">
+                        <option value="wa">WhatsApp (Broadcast)</option>
+                        <option value="ig">Instagram (Caption)</option>
+                        <option value="fb">Facebook (Storytelling)</option>
+                        <option value="tiktok">TikTok (Script Video)</option>
+                    </select>
+                </div>
+
+                <label style="color:var(--gold);">🔥 Input Topik Viral (Opsional)</label>
+                <input type="text" id="viral-input" class="viral-input" placeholder="Contoh: Kenaikan UKT, Isu Resesi, dll...">
+                <div style="font-size:0.7rem; color:#666; margin-top:5px;">*Jika diisi, sistem akan meramu topik ini. Jika kosong, sistem pakai database otomatis.</div>
+
+                <label>Atau Pilih Kategori Otomatis</label>
+                <div style="position:relative">
+                    <select id="input-topic">
+                        <option value="profit">💰 Profit & Anti-Inflasi</option>
+                        <option value="sandwich">🥪 Sandwich Generation</option>
+                        <option value="trust">🛡️ Legalitas & Trust</option>
+                        <option value="fomo">🔥 Viral & Momentum</option>
+                    </select>
+                </div>
+                
+                <button onclick="generateContent()" class="btn-gold">GENERATE SEKARANG ✨</button>
+            </div>
+        </div>
+
+        <div id="view-result">
+            <div class="glass-card">
+                <h2>📋 Output Konten</h2>
+                <div class="output-wrapper">
+                    <div id="output-text" style="text-align:center; color:#444; font-style:italic;">Siap Generate. Masukkan topik viral atau pilih kategori.</div>
+                </div>
+                <div style="display:flex; gap:10px; margin-top:10px;">
+                    <button onclick="copyText()" class="btn-secondary">Salin</button>
+                    <button onclick="shareText()" class="btn-secondary">Share</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-profit" class="hidden">
+            <div class="glass-card">
+                <h2>💎 Simulasi Dividen</h2>
+                <div style="text-align:center;color:#aaa;font-size:0.8rem;">(Estimasi Siklus 10 Hari)</div>
+                <div class="money-val" id="disp-usd">$0.00</div>
+                <div class="money-idr" id="disp-idr">Rp 0</div>
+                <div class="badges"><div class="badge active" id="badge-level">LV -</div><div class="badge active" id="badge-rate">0%</div></div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                    <div><label>Total Tim</label><input type="number" id="inp-member" value="100"></div>
+                    <div><label>Avg Trade</label><input type="number" id="inp-vol" value="100"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <button onclick="switchTab('creator')" id="tab-creator" class="tab-btn active">✍️ Creator</button>
+        <button onclick="switchTab('profit')" id="tab-profit" class="tab-btn">💰 Profit</button>
+    </nav>
+
+<script>
+    // --- DATABASE STANDARD ---
+    const db = {
+        hooks: [ "Info A1 Mazzeh! 🔥", "Stop scrolling bentar! 🛑", "Real Talk: 2026 Bahaya! ⚠️", "Sumpah nyesel baru tau... 🤯", "Bocoran orang dalem nih... 🤫" ],
+        profit: { 
+            probs: ["Harga naik, gaji tetep. Pusing?", "Inflasi gerogoti tabunganmu?"], 
+            sols: ["Lawan pakai Profit Harian DV Opalp.", "Cetak USDT tiap hari lawan Rupiah."], 
+            emos: ["Sekarang beli apa aja gak liat harga.", "Hidup tenang, cashflow lancar."],
+            ctas: ["Mulai cetak duit sekarang!", "Amankan asetmu di sini."]
+        },
+        sandwich: {
+            probs: ["Beban Ortu + Anak = Punggung Remuk?", "Kerja keras bagai kuda tapi duit abis?"],
+            sols: ["Bangun aset Passive Income di MCC-NP.", "Duplikasi tim 5 orang, biarkan sistem kerja."],
+            emos: ["Akhirnya bisa nafas lega.", "Seneng bisa bahagiain orang tua."],
+            ctas: ["Putus rantai kemiskinan sekarang!", "DM 'SIAP' untuk strategi."]
+        },
+        trust: {
+            probs: ["Takut kena scam investasi bodong?", "Bingung bedain yang real dan halu?"],
+            sols: ["DV Team pegang lisensi MSB FinCEN US.", "Garansi Modal 100% aman."],
+            emos: ["Tidur nyenyak, dana aman.", "Bangga gabung komunitas legal."],
+            ctas: ["Pilih yang pasti-pasti aja.", "Cek legalitas di link bio."]
+        },
+        fomo: {
+            probs: ["Temen udah sukses, kok kita belum?", "Ketinggalan trend lagi?"],
+            sols: ["Momentum emas DV Team lagi naik!", "AI Trading akurasi 96.8%."],
+            emos: ["Untung curi start duluan.", "Rasanya jadi pemenang."],
+            ctas: ["Gaspol sebelum slot penuh!", "Join winning team sekarang!"]
+        }
+    };
+
+    // --- LOGIKA "VIRAL INJECTION" (Suntik Topik Manual) ---
+    function generateContent() {
+        const p = document.getElementById('input-platform').value;
+        const viralInput = document.getElementById('viral-input').value.trim();
+        let txt = "";
+
+        // JIKA USER KETIK TOPIK VIRAL SENDIRI
+        if (viralInput) {
+            const topic = viralInput.toUpperCase();
+            const date = new Date().toLocaleDateString('id-ID', {weekday:'long'});
+            
+            if (p === 'wa') {
+                txt = `*${topic} LAGI RAME BANGET!* 😱\n\nHalo Rekan, selamat hari ${date}.\n\nLagi heboh banget kan soal *${topic}*? Banyak yang panik, banyak yang bingung.\n\nTapi jujur, kalau kita cuma ngeluh soal *${topic}*, nasib gak bakal berubah.\n\n💡 *SOLUSINYA?*\nFokus bangun benteng keuangan sendiri bareng **MCC-NP (DV Team)**. Biarkan orang sibuk bahas masalah, kita sibuk cetak profit harian.\n\nJangan sampai tergerus keadaan. Ayo antisipasi sekarang!\n\n👉 *Balas pesan ini untuk diskusi strategi!*`;
+            } else if (p === 'ig') {
+                txt = `🔥 **JANGAN CUMA JADI KORBAN ISU ${topic}**\n.\nLagi viral banget kan berita soal ${topic}? 🤔\n.\nValid sih kalau bikin cemas. Tapi pertanyaannya: *Apa rencana backup kamu?*\n.\n✅ **SOLUSI CERDAS:**\nJangan bergantung pada satu sumber income. Bangun aset digital di DV Team (MCC-NP). Lawan ketidakpastian dengan kepastian profit harian.\n.\n💎 *Rasanya tenang banget punya pegangan di tengah badai isu ini.*\n.\n🚀 **ACTION NOW:**\nAmankan posisimu sebelum terlambat. Klik link di bio!\n.\n#${topic.replace(/\s/g,'')} #DVTeam #MCCNP #SolusiFinansial`;
+            } else if (p === 'fb') {
+                txt = `Lagi Rame: ${topic} 😰\n\nTeman-teman, pasti udah denger kan soal ${topic} yang lagi viral?\n\nJujur, awalnya saya juga kepikiran. Gimana nasib ke depan kalau keadaannya gini terus?\n\nTapi Alhamdulillah, saya bersyukur banget udah kenal sistem **DV Team (MCC-NP)**. Di saat luar sana ribut soal ${topic}, di sini kita tetap tenang karena ada *Passive Income* yang jalan terus.\n\nSaran saya, jangan nunggu kepepet. Siapkan payung sebelum hujan.\n\nMau tau caranya? Komen "MAU" ya 👇`;
+            } else if (p === 'tiktok') {
+                txt = `[Visual: Screenshot Berita ${topic} -> Wajah Serius]\n\n(Teks: ${topic} Bikin Panik?)\n\nVoiceover: "Guys, kalian udah denger berita soal ${topic}? Ngeri banget ya?"\n\n(Transisi ke Chart Profit DV/Logo MCC)\n\n"Tapi stop panik! Di DV Team, kita punya solusinya."\n\n"Saat orang lain pusing mikirin ${topic}, member DV Team malah senyum lebar liat profit harian."\n\n(Ending: Tunjuk Link Bio)\n\n"Jangan cuma jadi penonton. Amankan masa depanmu sekarang! Klik link bio."`;
+            }
+        } 
+        
+        // JIKA USER KOSONGKAN KOLOM (PAKAI DATABASE OTOMATIS)
+        else {
+            const t = document.getElementById('input-topic').value;
+            const data = db[t];
+            const hook = db.hooks[Math.floor(Math.random()*db.hooks.length)];
+            const prob = data.probs[Math.floor(Math.random()*data.probs.length)];
+            const sol = data.sols[Math.floor(Math.random()*data.sols.length)];
+            const emo = data.emos[Math.floor(Math.random()*data.emos.length)];
+            const cta = data.ctas[Math.floor(Math.random()*data.ctas.length)];
+            
+            if(p==='wa') txt = `*${hook}*\n\n${prob}\n\n💡 *Solusi:*\n${sol}\n\n✨ ${emo}\n\n👉 *${cta}*`;
+            else if(p==='ig') txt = `🔥 **${hook}**\n.\n${prob}\n.\n✅ ${sol}\n.\n💎 ${emo}\n.\n🚀 ${cta}\n.\n#DVTeam #MCCNP`;
+            else if(p==='fb') txt = `${hook}\n\n"${prob}"\n\nSolusinya: ${sol}\n\n${emo}\n\n${cta}`;
+            else txt = `[Visual: Kaget]\n\n(Teks: ${hook})\n\n"${prob}?"\n\n(Cut Profit)\n\n"Nih: ${sol}"\n\n"${emo}"\n\n(Bio)\n\n"${cta}"`;
+        }
+
+        const out = document.getElementById('output-text');
+        out.style.fontStyle = "normal"; out.style.textAlign = "left"; out.style.color = "#e0e0e0";
+        out.innerText = txt;
+        if(window.innerWidth < 768) document.getElementById('view-result').scrollIntoView({behavior:'smooth'});
+    }
+
+    // --- SYSTEM & CALCULATOR ---
+    const quotes = [ "Masa depan dimulai hari ini.", "Bangun aset, bukan sekadar cari gaji.", "Kerja cerdas dengan MCC-NP.", "Risiko terbesar adalah diam.", "Fokus pada aset, bukan omset." ];
+    document.getElementById('quote-text').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+
+    function enterApp() {
+        document.getElementById('splash-screen').style.opacity = '0';
+        setTimeout(() => { document.getElementById('splash-screen').style.display='none'; document.getElementById('main-app').style.opacity = '1'; }, 500);
+    }
+    
+    function calculateProfit() {
+        const m = parseFloat(document.getElementById('inp-member').value)||0;
+        const v = parseFloat(document.getElementById('inp-vol').value)||0;
+        let r=0, l="LV -";
+        if(m>=3500){r=0.05;l="LV9"}else if(m>=1601){r=0.035;l="LV8"}else if(m>=901){r=0.03;l="LV7"}
+        else if(m>=501){r=0.025;l="LV6"}else if(m>=351){r=0.02;l="LV5"}else if(m>=201){r=0.015;l="LV4"}
+        else if(m>=101){r=0.01;l="LV3"}else if(m>=31){r=0.005;l="LV2"}else if(m>=5){r=0.003;l="LV1"}
+        
+        const res = ((m*v*0.0085)*10)*r;
+        document.getElementById('disp-usd').innerText = "$"+res.toLocaleString('en-US',{minimumFractionDigits:2});
+        document.getElementById('disp-idr').innerText = "Rp "+(res*15500).toLocaleString('id-ID');
+        document.getElementById('badge-level').innerText = l;
+        document.getElementById('badge-rate').innerText = (r*100).toFixed(1)+"%";
+    }
+
+    function switchTab(t) {
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        document.getElementById('tab-'+t).classList.add('active');
+        const vp=document.getElementById('view-profit'), vc=document.getElementById('view-creator'), vr=document.getElementById('view-result');
+        if(t==='profit'){ vp.classList.remove('hidden'); vc.classList.add('hidden'); if(window.innerWidth<768)vr.classList.add('hidden');}
+        else { vp.classList.add('hidden'); vc.classList.remove('hidden'); vr.classList.remove('hidden');}
+    }
+    
+    function copyText() { navigator.clipboard.writeText(document.getElementById('output-text').innerText).then(()=>alert('Tersalin!')); }
+    function shareText() { if(navigator.share) navigator.share({text:document.getElementById('output-text').innerText}); else copyText(); }
+
+    document.getElementById('inp-member').addEventListener('input', calculateProfit);
+    document.getElementById('inp-vol').addEventListener('input', calculateProfit);
+    calculateProfit();
+</script>
+</body>
+</html>
