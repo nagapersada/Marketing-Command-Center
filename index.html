@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DV OPALP Creator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-glow: #F4C430;
+            --bg: #050505;
+            --card: #121212;
+            --text: #ffffff;
+            --accent: #1e1e1e;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px 15px 50px 15px;
+            background-image: radial-gradient(circle at top, #1a1500 0%, #000000 60%);
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #222; padding-bottom: 20px; }
+        .header h1 {
+            color: var(--gold); margin: 0; font-size: 2rem; font-weight: 800; letter-spacing: 1px;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+        .header p { color: #666; font-size: 0.8rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* NAV */
+        .nav-container { display: flex; background: var(--accent); border-radius: 50px; padding: 5px; margin-bottom: 25px; }
+        .nav-btn {
+            flex: 1; padding: 12px; border: none; background: transparent; color: #666;
+            font-weight: 600; border-radius: 40px; cursor: pointer; transition: 0.3s;
+        }
+        .nav-btn.active { background: var(--gold); color: #000; box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+
+        /* CARD */
+        .section { display: none; animation: slideUp 0.4s ease; }
+        .section.active { display: block; }
+        .card { background: var(--card); border: 1px solid #333; border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+
+        label { display: block; color: #888; font-size: 0.8rem; margin-bottom: 8px; margin-top: 15px; font-weight: 600; }
+        
+        select, input {
+            width: 100%; padding: 16px; background: #000; border: 1px solid #333;
+            border-radius: 12px; color: white; font-size: 1rem; font-family: inherit; appearance: none;
+        }
+        
+        /* TOMBOL GENERATE (ANIMASI) */
+        .btn-action {
+            width: 100%; padding: 18px; margin-top: 25px;
+            background: linear-gradient(135deg, var(--gold), #b5952f);
+            color: #000; font-weight: 800; font-size: 1rem; border: none; border-radius: 12px;
+            cursor: pointer; box-shadow: 0 5px 20px rgba(212, 175, 55, 0.2);
+            transition: transform 0.1s; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .btn-action:active { transform: scale(0.96); }
+
+        /* HASIL KONTEN */
+        .result-area { display: none; margin-top: 20px; background: #080808; border-left: 4px solid var(--gold); border-radius: 8px; padding: 20px; }
+        .result-text { white-space: pre-wrap; font-size: 0.95rem; line-height: 1.6; color: #ddd; }
+        
+        /* DISPLAY UANG */
+        .money { font-size: 2.2rem; color: var(--gold); font-weight: 700; margin: 10px 0; text-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>DV OPALP</h1>
+        <p>Infinity Content Engine</p>
+    </div>
+
+    <div class="nav-container">
+        <button id="tab-creator" class="nav-btn active">Creator</button>
+        <button id="tab-profit" class="nav-btn">Profit Sim</button>
+    </div>
+
+    <div id="section-creator" class="section active">
+        <div class="card">
+            <h3 style="color:var(--gold); margin:0 0 5px 0;">🔥 Viral Content Generator</h3>
+            <p style="color:#666; font-size:0.8rem; margin:0;">Buat ribuan variasi konten unik dalam 1 klik.</p>
+            
+            <label>Mau Posting Di Mana?</label>
+            <select id="input-platform">
+                <option value="wa">WhatsApp (Personal & Hangat)</option>
+                <option value="ig">Instagram/FB (Caption Kekinian)</option>
+                <option value="tiktok">TikTok/Reels (Script Video)</option>
+            </select>
+
+            <label>Apa Topik Hari Ini?</label>
+            <select id="input-topic">
+                <option value="profit">📈 Profit & Akurasi (Greget!)</option>
+                <option value="security">🛡️ Aman & Legal (Trust)</option>
+                <option value="team">🔥 The Power of 5 (Semangat)</option>
+            </select>
+
+            <button id="btn-generate" class="btn-action">BUAT KONTEN SEKARANG ⚡</button>
+        </div>
+
+        <div id="result-box" class="result-area">
+            <div id="output-text" class="result-text"></div>
+            <button id="btn-copy" class="btn-action" style="margin-top:15px; background:#222; color:white; border:1px solid #444; box-shadow:none;">📋 SALIN TEKS</button>
+        </div>
+    </div>
+
+    <div id="section-profit" class="section">
+        <div class="card">
+            <h3 style="color:var(--gold); margin:0;">💎 Simulasi Dividen</h3>
+            <p style="font-size:0.8rem; color:#666; margin-top:5px;">Rumus: ((Member × Vol × 0.85%) × 10 Hari) × Rate</p>
+            
+            <label>Jumlah Anggota Tim</label>
+            <input type="number" id="input-member" value="100" inputmode="numeric">
+
+            <label>Rata-rata Trading ($)</label>
+            <input type="number" id="input-vol" value="100" inputmode="numeric">
+            
+            <div style="text-align:center; margin-top:20px; background:#080808; padding:20px; border-radius:12px;">
+                <div style="font-size:0.9rem; color:#888;">Profit Bersih (10 Hari)</div>
+                <div id="calc-usd" class="money">$0.00</div>
+                <div style="color:#fff; font-size:1.1rem;">Rp <span id="calc-idr">0</span></div>
+                <div style="font-size:0.8rem; color:#555; margin-top:10px;">Level: <span id="calc-level" style="color:var(--gold)">-</span> | Rate: <span id="calc-rate">-</span></div>
+            </div>
+            
+            <button id="btn-recalc" class="btn-action" style="margin-top:15px; background:#222; color:#fff;">HITUNG ULANG</button>
+        </div>
+    </div>
+
+<script>
+    // --- DATABASE KATA-KATA (THE BRAIN) ---
+    // Sistem ini mengacak potongan kalimat untuk membuat konten baru setiap saat.
+    
+    const db = {
+        hooks: [
+            "Gila sih ini! 🤯", "Stop scroll dulu bentar! 🛑", "Info A1 buat yang mau cuan! 🔥", 
+            "Jujurly, nyesel banget baru tau sekarang...", "Bocoran orang dalem nih guys!", 
+            "Hari gini masih bingung cari side income?", "Gaspol! Momentum emas gak dateng dua kali!",
+            "Wajib baca sebelum dihapus! ⚠️", "Real talk: Ini solusi finansial 2026.", "Sumpah, ini daging banget infonya! 🥩"
+        ],
+        
+        profit: {
+            problems: [
+                "Capek kena prank market terus?", "Lelah boncos mulu pas trading sendiri?", 
+                "Mau trading tapi gak punya waktu pantau chart?", "Gaji numpang lewat doang tiap bulan?"
+            ],
+            solutions: [
+                "Nih kenalin, sistem DV Team dengan AI Sinyal super canggih.", 
+                "Di sini kita trading pake DATA, bukan pake perasaan.",
+                "Cukup ikut arahan Mr. Mark Davis (PhD MIT), akurasi 96.8%!", 
+                "Bayangin punya asisten AI yang kasih tau kapan Buy/Sell."
+            ],
+            emotions: [
+                "Rasanya tuh tenang banget, tidur nyenyak cuan ngalir.", 
+                "Akhirnya bisa ngerasain profit konsisten tanpa senam jantung.",
+                "Gak perlu jago, yang penting mau ikut sistem.",
+                "Bener-bener game changer buat ekonomi keluarga."
+            ],
+            cta: [
+                "Gas join sekarang, slot terbatas!", "Klik link di bio sebelum ketinggalan kereta.", 
+                "Jangan nonton doang, ayo buktiin sendiri!", "DM 'MAU' sekarang juga!"
+            ]
+        },
+
+        security: {
+            problems: [
+                "Takut ketipu platform bodong?", "Trauma sama investasi yang scam?", 
+                "Ragu naruh dana karena gak jelas legalitasnya?", "Cari yang amanah kok susah banget ya?"
+            ],
+            solutions: [
+                "Tenang Bestie! Opalp Exchange udah pegang lisensi MSB FinCEN Amerika Serikat! 🇺🇸",
+                "Kita didukung sama Sequoia Capital lho, investornya Google & Apple.",
+                "Dana penjaminan awal 5 Juta USDT siap backup kita.",
+                "Satu-satunya komunitas yang berani kasih Garansi Modal 100%!"
+            ],
+            emotions: [
+                "Investasi tuh harusnya bikin tenang, bukan bikin deg-degan.",
+                "Valid banget, legalitas jelas bikin hati adem.",
+                "Ini baru namanya bisnis profesional kelas dunia.",
+                "Bangga banget bisa jadi bagian dari ekosistem sekeren ini."
+            ],
+            cta: [
+                "Cek legalitasnya di link bio!", "Gabung komunitas resmi kami sekarang.", 
+                "Amankan masa depanmu di tempat yang tepat.", "Reply chat ini buat liat sertifikatnya."
+            ]
+        },
+
+        team: {
+            problems: [
+                "Pengen gaji setara Manajer tapi kerjanya rebahan?", "Mau pasif income yang beneran ngalir tiap minggu?", 
+                "Bosen kerja keras tapi hasil gitu-gitu aja?", "Cari bisnis yang bisa diduplikasi dengan mudah?"
+            ],
+            solutions: [
+                "Kuncinya di 'The Power of 5'. Cukup kelola 5 tim inti!", 
+                "Sistem Dividen Volume DV Team itu jenius banget.",
+                "Saat timmu trading, kamu dapet cipratan profitnya. Gokil kan?",
+                "Duplikasi 5 level, potensi income bisa tembus ratusan juta!"
+            ],
+            emotions: [
+                "Asli, merinding liat notif transferan masuk tiap minggu.", 
+                "Bukan sekadar uang, tapi kebebasan waktu buat keluarga.",
+                "Kerja cerdas, bukan kerja keras. Ini buktinya.",
+                "Semangat bangun aset, nikmatin hasilnya seumur hidup."
+            ],
+            cta: [
+                "Pelajari strategi 'Power of 5' sekarang!", "Tanya saya caranya, gratis!", 
+                "Ayo bangun kerajaan bisnismu bareng DV Team.", "Siap sukses bareng? Klik link bio!"
+            ]
+        }
+    };
+
+    // --- ENGINE PENGACAK KATA ---
+    function getRandom(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function generateContent(platform, topic) {
+        const data = db[topic];
+        const hook = getRandom(db.hooks);
+        const prob = getRandom(data.problems);
+        const sol = getRandom(data.solutions);
+        const emo = getRandom(data.emotions);
+        const call = getRandom(data.cta);
+        const date = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
+
+        // FORMATTING BERDASARKAN PLATFORM
+        if (platform === 'wa') {
+            return `*${hook}*\n\nHalo Rekan, semangat pagi di hari ${date}! 👋\n\n${prob}\n\n${sol} ${emo}\n\nSaya gak mau Anda melewatkan ini. Mumpung momentumnya lagi bagus banget.\n\n👉 *${call}*\n\nSalam Sukses,\nPartner DV Team`;
+        } 
+        else if (platform === 'ig') {
+            return `🔥 **${hook}**\n.\n${prob} 🤔\n.\n${sol} ✨\n.\n${emo} Percaya deh, ini beda dari yang lain.\n.\n🚀 **${call}**\n.\n#DVTeam #Opalp #CuanKekinian #MarkDavis #InvestasiCerdas #PassiveIncome #TradingSignal #${topic}2026`;
+        } 
+        else if (platform === 'tiktok') {
+            return `[SCENE: Wajah antusias atau Screen Record Profit]\n\n(Teks di Layar: ${hook})\n\nVoiceover:\n"Guys, ${prob}?"\n\n(Transisi cepat ke Bukti/Chart)\n\n"Dengerin nih! ${sol}"\n\n(Visual: Testimoni/Suasana Happy)\n\n"${emo}"\n\n(Ending: Tunjuk Link Bio)\n\n"Tunggu apa lagi? ${call}"`;
+        }
+    }
+
+    // --- LOGIC INTERAKSI ---
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // Tab System
+        const tabs = document.querySelectorAll('.nav-btn');
+        const sections = document.querySelectorAll('.section');
+        
+        tabs[0].addEventListener('click', () => {
+            tabs[0].classList.add('active'); tabs[1].classList.remove('active');
+            sections[0].classList.add('active'); sections[1].classList.remove('active');
+        });
+        tabs[1].addEventListener('click', () => {
+            tabs[1].classList.add('active'); tabs[0].classList.remove('active');
+            sections[1].classList.add('active'); sections[0].classList.remove('active');
+        });
+
+        // Content Generator
+        document.getElementById('btn-generate').addEventListener('click', () => {
+            const p = document.getElementById('input-platform').value;
+            const t = document.getElementById('input-topic').value;
+            const content = generateContent(p, t);
+            
+            const output = document.getElementById('output-text');
+            output.style.opacity = 0;
+            output.innerText = content;
+            
+            // Animasi Fade In
+            setTimeout(() => { output.style.transition = 'opacity 0.5s'; output.style.opacity = 1; }, 100);
+            
+            document.getElementById('result-box').style.display = 'block';
+            document.getElementById('result-box').scrollIntoView({behavior:'smooth'});
+        });
+
+        // Copy Button
+        document.getElementById('btn-copy').addEventListener('click', function() {
+            navigator.clipboard.writeText(document.getElementById('output-text').innerText);
+            this.innerText = "SUDAH DISALIN! ✅";
+            setTimeout(() => this.innerText = "📋 SALIN TEKS", 2000);
+        });
+
+        // Calculator Logic (Fixed Formula: ((M * V * 0.0085) * 10) * Rate)
+        function calc() {
+            const m = parseFloat(document.getElementById('input-member').value) || 0;
+            const v = parseFloat(document.getElementById('input-vol').value) || 0;
+            
+            let r = 0, l = "-";
+            if (m >= 3500) { r=0.05; l="LV9"; }
+            else if (m >= 1601) { r=0.035; l="LV8"; }
+            else if (m >= 901) { r=0.030; l="LV7"; }
+            else if (m >= 501) { r=0.025; l="LV6"; }
+            else if (m >= 351) { r=0.020; l="LV5"; }
+            else if (m >= 201) { r=0.015; l="LV4"; }
+            else if (m >= 101) { r=0.010; l="LV3"; }
+            else if (m >= 31) { r=0.005; l="LV2"; }
+            else if (m >= 5) { r=0.003; l="LV1"; }
+
+            const res = ((m * v * 0.0085) * 10) * r;
+            const idr = res * 15500;
+
+            document.getElementById('calc-usd').innerText = "$" + res.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+            document.getElementById('calc-idr').innerText = idr.toLocaleString('id-ID');
+            document.getElementById('calc-level').innerText = l;
+            document.getElementById('calc-rate').innerText = (r*100).toFixed(1) + "%";
+        }
+
+        document.getElementById('input-member').addEventListener('input', calc);
+        document.getElementById('input-vol').addEventListener('input', calc);
+        document.getElementById('btn-recalc').addEventListener('click', calc);
+        calc();
+    });
+</script>
+</body>
+</html>
