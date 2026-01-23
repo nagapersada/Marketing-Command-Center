@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MCC-NP">
+    <link rel="apple-touch-icon" href="logo.png">
+    <title>MCC-NP SYSTEM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        /* --- TEMA PREMIUM PRO --- */
+        :root { --gold: #D4AF37; --gold-light: #FFE5B4; --bg: #000000; --card: #121212; --text: #ffffff; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #000; color: #fff; margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden; }
+
+        /* --- SPLASH SCREEN --- */
+        #splash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; transition: opacity 0.5s; }
+        .logo-anim { width: 120px; margin-bottom: 20px; animation: pulse 2s infinite; }
+        .quote { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--gold); margin-bottom: 40px; font-style: italic; }
+        .btn-enter { background: var(--gold); color: #000; padding: 12px 40px; font-weight: 800; border: none; border-radius: 50px; cursor: pointer; letter-spacing: 2px; }
+        @keyframes pulse { 0%,100%{transform:scale(1); opacity:1;} 50%{transform:scale(1.05); opacity:0.8;} }
+
+        /* --- HEADER --- */
+        .header { padding: 15px 20px; background: rgba(10,10,10,0.95); border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        .brand { display: flex; align-items: center; gap: 10px; }
+        .brand h1 { margin: 0; font-size: 1.1rem; font-weight: 800; letter-spacing: 1px; color: #fff; } /* TEXT PUTIH SESUAI REQUEST */
+        .status { width: 8px; height: 8px; background: #0f0; border-radius: 50%; display: inline-block; margin-left: 5px; box-shadow: 0 0 5px #0f0; }
+
+        /* --- CONTENT --- */
+        .container { padding: 20px; padding-bottom: 120px; max-width: 800px; margin: 0 auto; }
+        .card { background: var(--card); border: 1px solid #333; border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+        h2 { color: var(--gold); font-size: 0.9rem; margin: 0 0 15px 0; text-transform: uppercase; letter-spacing: 1px; }
+        
+        label { display: block; color: #888; font-size: 0.7rem; margin: 15px 0 5px 0; font-weight: 700; text-transform: uppercase; }
+        select, input { width: 100%; background: #1a1a1a; border: 1px solid #444; color: #fff; padding: 14px; border-radius: 10px; font-size: 0.95rem; outline: none; }
+        select:focus, input:focus { border-color: var(--gold); }
+        .viral-box { background: rgba(212,175,55,0.1); border: 1px solid var(--gold); }
+
+        .btn-main { width: 100%; padding: 16px; margin-top: 20px; background: linear-gradient(135deg, var(--gold), #b8860b); color: #000; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 15px rgba(212,175,55,0.3); }
+        .btn-main:active { transform: scale(0.98); }
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-sub { flex: 1; background: #333; color: #fff; padding: 12px; border: 1px solid #555; border-radius: 10px; cursor: pointer; font-weight: 600; }
+
+        /* --- OUTPUT TEXT (KONTRAS TINGGI) --- */
+        .output { 
+            background: #1e1e1e; /* Abu gelap agar teks putih terbaca jelas */
+            border: 1px solid #444; 
+            border-radius: 10px; 
+            padding: 20px; 
+            min-height: 150px; 
+            color: #ffffff; /* PASTI TERBACA */
+            font-size: 0.95rem; 
+            line-height: 1.6; 
+            white-space: pre-wrap;
+        }
+        .placeholder { color: #666; text-align: center; font-style: italic; padding-top: 40px; }
+
+        /* --- PROFIT & DREAM VISUALIZER --- */
+        .money-box { text-align: center; border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px; }
+        .usd { font-size: 2.5rem; font-weight: 800; color: var(--gold); font-family: 'Playfair Display', serif; }
+        .idr { font-size: 1.1rem; color: #ccc; margin-top: 5px; }
+        .badges { display: flex; justify-content: center; gap: 10px; margin-top: 10px; }
+        .badge { font-size: 0.7rem; padding: 4px 10px; background: #222; border: 1px solid #444; border-radius: 5px; color: #aaa; }
+
+        /* IMAGE CONTAINER - FIXED */
+        .dream-container { 
+            background: #000; 
+            border: 1px solid var(--gold); 
+            border-radius: 12px; 
+            overflow: hidden; 
+            display: none; /* Hidden by default */
+            margin-top: 20px;
+        }
+        .dream-img { 
+            width: 100%; 
+            height: 220px; 
+            object-fit: cover; 
+            display: block; 
+        }
+        .dream-cap { 
+            padding: 15px; 
+            text-align: center; 
+            background: linear-gradient(to top, #1a1a1a, #000); 
+        }
+        .dream-title { color: var(--gold); font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
+        .dream-desc { color: #fff; font-size: 1.1rem; font-family: 'Playfair Display', serif; font-style: italic; }
+
+        /* --- NAV --- */
+        .nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(10,10,10,0.98); border-top: 1px solid #333; padding: 12px 20px 30px; display: flex; gap: 15px; z-index: 90; }
+        .nav-btn { flex: 1; padding: 12px; background: transparent; color: #666; border: 1px solid transparent; border-radius: 10px; font-weight: 700; transition: 0.3s; }
+        .nav-btn.active { background: #222; color: var(--gold); border-color: #444; }
+        .hidden { display: none !important; }
+        .fade { animation: fade 0.4s ease; }
+        @keyframes fade { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+    </style>
+</head>
+<body>
+
+    <div id="splash">
+        <img src="logo.png" class="logo-anim" alt="Logo">
+        <div class="quote" id="quote">Loading...</div>
+        <button onclick="enterApp()" class="btn-enter">MASUK SYSTEM</button>
+    </div>
+
+    <div class="header">
+        <div class="brand">
+            <img src="logo.png" style="height:32px;">
+            <h1>MCC-NP <span class="status"></span></h1>
+        </div>
+        <div style="font-size:0.6rem; color:#666; border:1px solid #333; padding:4px 8px; border-radius:10px;">V19 ULTRA</div>
+    </div>
+
+    <div class="container">
+        
+        <div id="tab-creator" class="fade">
+            <div class="card">
+                <h2>⚡ Infinite Content Generator</h2>
+                <label>Platform Target</label>
+                <select id="platform">
+                    <option value="wa_story">🟢 WA Status (Singkat & Padat)</option>
+                    <option value="wa_chat">🟢 WA Broadcast (Personal)</option>
+                    <option value="ig">📸 Instagram (Visual)</option>
+                    <option value="fb">🔵 Facebook (Storytelling)</option>
+                    <option value="tiktok">🎵 TikTok (Naskah Video)</option>
+                </select>
+
+                <label style="color:var(--gold);">🔥 Input Topik Viral (Opsional)</label>
+                <input type="text" id="viral" class="viral-box" placeholder="Cth: PHK, Harga Beras, Resesi...">
+                
+                <label>Atau Pilih Kategori</label>
+                <select id="topic">
+                    <option value="money">💰 Keuangan & Profit</option>
+                    <option value="family">👨‍👩‍👧‍👦 Keluarga & Harapan</option>
+                    <option value="trust">🛡️ Legalitas & Keamanan</option>
+                    <option value="system">⚙️ Sistem 5 Orang</option>
+                </select>
+
+                <button onclick="generate()" class="btn-main">GENERATE 100x VARIASI 🎲</button>
+            </div>
+
+            <div class="card">
+                <h2>📋 Hasil Copywriting</h2>
+                <div class="output">
+                    <div id="result" class="placeholder">Hasil akan muncul di sini...</div>
+                </div>
+                <div class="btn-group">
+                    <button onclick="copy()" class="btn-sub">Salin</button>
+                    <button onclick="share()" class="btn-sub">Bagikan</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-profit" class="fade hidden">
+            <div class="card">
+                <h2>💎 Simulasi Dividen</h2>
+                <div class="money-box">
+                    <div class="usd" id="usd">$0.00</div>
+                    <div class="idr" id="idr">Rp 0</div>
+                    <div class="badges">
+                        <span class="badge" id="lvl">LV -</span>
+                        <span class="badge" id="rate">0%</span>
+                    </div>
+                </div>
+
+                <div id="dream-wrap" class="dream-container">
+                    <img id="dream-img" src="" class="dream-img">
+                    <div class="dream-cap">
+                        <div class="dream-title">🔥 VISUALISASI HASIL:</div>
+                        <div id="dream-txt" class="dream-desc"></div>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:20px;">
+                    <div><label>Total Tim</label><input type="number" id="members" value="100"></div>
+                    <div><label>Avg Trade ($)</label><input type="number" id="volume" value="100"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav">
+        <button onclick="switchTab('creator')" id="nav-creator" class="nav-btn active">✍️ Creator</button>
+        <button onclick="switchTab('profit')" id="nav-profit" class="nav-btn">💰 Profit</button>
+    </div>
+
+<script>
+    // --- 1. SPLASH SCREEN ---
+    const quotes = [
+        "Masa depan dibeli dengan keputusan hari ini.",
+        "Bangun aset, jangan seumur hidup cari omset.",
+        "Sukses berpola, gagal juga berpola. Ikuti sistemnya.",
+        "Risiko terbesar adalah tidak mengambil risiko sama sekali."
+    ];
+    document.getElementById('quote').innerText = '"' + quotes[Math.floor(Math.random()*quotes.length)] + '"';
+    
+    function enterApp() {
+        document.getElementById('splash').style.opacity = 0;
+        setTimeout(()=>{document.getElementById('splash').style.display='none'},500);
+    }
+
+    // --- 2. INFINITE GENERATOR ENGINE (100x VARIATION) ---
+    // Sistem merakit kalimat dari 5 komponen berbeda secara acak.
+    const db = {
+        intros: ["Halo Rekan,", "Semangat Pagi,", "Info Penting,", "Breaking News:", "Dear Partners,", "Assalamualaikum,"],
+        
+        hooks: [
+            "Stop scrolling bentar! Ini penting.",
+            "Jujurly, nyesel banget baru tau ini.",
+            "Fakta tahun 2026 yang orang takut omongin.",
+            "Real Talk: Gaji UMR gak akan cukup.",
+            "Mau sampe kapan kerja keras hasil minim?",
+            "Valid no debat! Solusi paling logis saat ini.",
+            "Bocoran orang dalem nih, jangan di-skip.",
+            "Pernah gak ngerasa dompet makin tipis?",
+            "Bayangin kalau besok sumber income utama hilang."
+        ],
+
+        // Masalah yang Relate (Banyak Variasi)
+        problems: [
+            "Inflasi makin gila, harga barang naik, gaji jalan di tempat.",
+            "Tabungan di bank malah kegerus biaya admin.",
+            "Posisi Sandwich Generation itu berat. Atas butuh, bawah butuh.",
+            "Pengen bahagiain orang tua tapi dompet belum support.",
+            "Biaya sekolah anak makin mahal, pusing kan?",
+            "Banyak aplikasi bodong bikin trauma investasi.",
+            "Takut uang hasil keringat lenyap dibawa kabur owner.",
+            "Bisnis sendirian itu capek, hasilnya terbatas."
+        ],
+
+        // Jembatan Emosi
+        bridges: [
+            "Saya juga pernah ngalamin itu, rasanya sesak banget.",
+            "Tapi tenang, kamu gak sendirian.",
+            "Untungnya, ada jalan keluar yang lebih cerdas.",
+            "Kabar baiknya, di tahun 2026 ini ada solusinya.",
+            "Syukurlah saya ketemu komunitas ini tepat waktu."
+        ],
+
+        // Solusi (Fakta DV Team)
+        solutions: [
+            "DV Team dengan sistem Opalp Exchange adalah kuncinya.",
+            "Kita trading pakai Data AI, akurasi tembus 96.8%.",
+            "Sistem Manajemen 5 Orang bikin kita punya passive income.",
+            "Keamanan No.1, kita pegang lisensi MSB FinCEN Amerika.",
+            "Ada Garansi Modal 100% kalau ikut sinyal resmi Mark Davis."
+        ],
+
+        // Call to Action
+        ctas: [
+            "Jangan tunda lagi. Ambil keputusan sekarang.",
+            "Slot tim terbatas. Amankan posisimu.",
+            "Jadilah bukti selanjutnya. Chat saya!",
+            "Gaspol mumpung momentum lagi bagus!",
+            "Klik link di bio untuk info lengkap."
+        ]
+    };
+
+    function generate() {
+        const plat = document.getElementById('platform').value;
+        const viral = document.getElementById('viral').value.trim();
+        
+        // Randomizer
+        const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+        let txt = "";
+
+        // MODE VIRAL
+        if (viral) {
+            const isu = viral.toUpperCase();
+            if(plat.includes('story')) txt = `⚠️ *LAGI RAME: ${isu}*\n\nJangan panik! Di saat orang lain pusing soal ${viral}, member DV Team tetap tenang profit jalan terus. 💸\n\nSolusi cerdas: Bangun benteng keuanganmu sendiri!\n\n📲 *Reply "MAU" buat infonya!*`;
+            else txt = `🔥 **ISU VIRAL: ${isu}**\n\nLagi rame banget soal *${isu}*. Jujur, dampaknya ngeri kalau kita gak siap.\n\nTapi kabar baiknya, member **MCC-NP (DV Team)** tetap tenang. Kenapa?\n\n✅ Karena kita punya "Pipa Keuangan" yang kebal resesi.\n✅ Didukung Sequoia Capital & FinCEN.\n\nJangan nunggu kepepet. Siapkan payung sebelum hujan!\n\n🚀 *Amankan slot tim sekarang! Balas pesan ini.*`;
+        } 
+        // MODE INFINITE MIXER
+        else {
+            const intro = pick(db.intros);
+            const hook = pick(db.hooks);
+            const prob = pick(db.problems);
+            const bridge = pick(db.bridges);
+            const sol = pick(db.solutions);
+            const cta = pick(db.ctas);
+
+            if(plat === 'wa_story') txt = `🔥 *${hook}*\n\n"${prob}" 😔\n\nSolusinya? 👇\n${sol}\n\nDi DV Team, kita kerja cerdas. Buktikan sendiri!\n\n👉 *Reply Chat ini!*`;
+            else if(plat === 'wa_chat') txt = `*${intro}*\n\n${hook}\n\n"${prob}"\n\n${bridge} 💡 *SOLUSINYA:* ${sol}\n\n${cta}\n\nSalam Sukses,\nPartner DV Team`;
+            else if(plat === 'tiktok') txt = `[VISUAL: Wajah Serius]\n\n(Teks: ${hook})\n\nVO: "Guys, valid gak sih? ${prob}"\n\n(Transisi ke Chart)\n\nVO: "${bridge} Dengerin nih. ${sol}"\n\n(Ending)\n\nVO: "${cta} Cek Link Bio!"`;
+            else txt = `🔥 **${hook}**\n.\n${prob} 🤔\n.\n${bridge}\n✅ **SOLUSI:** ${sol}\n.\n🚀 ${cta}\n#DVTeam #MCCNP #InvestasiCerdas`;
+        }
+
+        document.getElementById('result').innerText = txt;
+        document.getElementById('result').classList.remove('placeholder');
+    }
+
+    // --- 3. PROFIT & DREAM (STABLE IMAGES) ---
+    function calc() {
+        const m = parseFloat(document.getElementById('members').value)||0;
+        const v = parseFloat(document.getElementById('volume').value)||0;
+        
+        let r=0, l="LV -";
+        if(m>=3500){r=0.05;l="LV9"}else if(m>=1601){r=0.035;l="LV8"}else if(m>=901){r=0.03;l="LV7"}
+        else if(m>=501){r=0.025;l="LV6"}else if(m>=351){r=0.02;l="LV5"}else if(m>=201){r=0.015;l="LV4"}
+        else if(m>=101){r=0.01;l="LV3"}else if(m>=31){r=0.005;l="LV2"}else if(m>=5){r=0.003;l="LV1"}
+
+        const res = ((m*v*0.0085)*10)*r;
+        const idr = res*15500;
+        document.getElementById('usd').innerText = "$"+res.toLocaleString('en-US',{minimumFractionDigits:2});
+        document.getElementById('idr').innerText = "Rp "+idr.toLocaleString('id-ID');
+        document.getElementById('lvl').innerText = l;
+        document.getElementById('rate').innerText = (r*100).toFixed(1)+"%";
+
+        updateDream(idr);
+    }
+
+    function updateDream(idr) {
+        const box = document.getElementById('dream-wrap');
+        const img = document.getElementById('dream-img');
+        const txt = document.getElementById('dream-txt');
+        let src = "";
+        let cap = "";
+
+        // LOGIKA GAMBAR MEWAH (UNSPLASH ID STABIL)
+        if (idr > 0 && idr < 1000000) { 
+            src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=80"; // Coffee
+            cap="Ngopi Santai & Makan Enak! ☕"; 
+        } 
+        else if (idr < 10000000) { 
+            src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&q=80"; // Shopping
+            cap="Belanja Tanpa Liat Harga! 🛍️"; 
+        } 
+        else if (idr < 50000000) { 
+            src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&q=80"; // Gadget
+            cap="Gadget Sultan & Emas Antam! 📱"; 
+        } 
+        else if (idr < 200000000) { 
+            src="https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&q=80"; // Motor
+            cap="Motor Sport Cash / Liburan Mewah! 🏍️"; 
+        } 
+        else if (idr < 1000000000) { 
+            src="https://images.unsplash.com/photo-1503376763036-066120622c74?w=600&q=80"; // Porsche
+            cap="Mobil Sport Impian! 🏎️"; 
+        } 
+        else { 
+            // ULTRA LUXURY (> 1 Milyar)
+            src="https://images.unsplash.com/photo-1600596542815-275088874804?w=600&q=80"; // Mansion
+            cap="RUMAH MEWAH & FINANCIAL FREEDOM! 🏰💎"; 
+        }
+
+        if(src && idr > 0) { 
+            box.style.display="block"; 
+            img.src=src; 
+            txt.innerText=cap; 
+        } else { 
+            box.style.display="none"; 
+        }
+    }
+
+    // --- UTILS ---
+    function switchTab(t) {
+        document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+        document.getElementById('nav-'+t).classList.add('active');
+        document.getElementById('tab-creator').classList.add('hidden');
+        document.getElementById('tab-profit').classList.add('hidden');
+        document.getElementById('tab-'+t).classList.remove('hidden');
+    }
+    function copy() { navigator.clipboard.writeText(document.getElementById('result').innerText).then(()=>alert('Tersalin!')); }
+    function share() { if(navigator.share) navigator.share({text:document.getElementById('result').innerText}); else copy(); }
+
+    document.getElementById('members').addEventListener('input', calc);
+    document.getElementById('volume').addEventListener('input', calc);
+    calc();
+</script>
+</body>
+</html>
